@@ -66,6 +66,10 @@ if submitted:
         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
     else:
         st.session_state.form_submitted = True
+        st.session_state.open_camera_name = None
+        st.session_state.warning_images = {}
+        st.session_state.bad_images = {}
+        
     
 if st.session_state.form_submitted:
     temp_dict = dict(zip(bucket_target_snake, required_fields))
@@ -96,7 +100,7 @@ if st.session_state.form_submitted:
             img_slot = st.empty()
             saved_img = st.session_state.warning_images.get(name)
             if saved_img is not None:
-                img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", use_container_width=True)
+                img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=600)
             if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}"):
                 st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
@@ -104,8 +108,9 @@ if st.session_state.form_submitted:
                 if photo is not None:
                     image = Image.open(photo)
                     st.session_state.warning_images[name] = image
-                    img_slot.image(image, caption="📷 Dokumentasi tersimpan: {name}", use_container_width=True)
-                    st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
+                    img_slot.image(image, caption="📷 Dokumentasi tersimpan: {name}", width=600)
+                    photo = None
+                    st.session_state.open_camera_name = None
         st.divider()
         
     if bad_flags:
@@ -115,7 +120,7 @@ if st.session_state.form_submitted:
             img_slot = st.empty()
             saved_img = st.session_state.bad_images.get(name)
             if saved_img is not None:
-                img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", use_container_width=True)
+                img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=600)
             if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}"):
                 st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
@@ -123,11 +128,15 @@ if st.session_state.form_submitted:
                 if photo is not None:
                     image = Image.open(photo)
                     st.session_state.bad_images[name] = image
-                    img_slot.image(image, caption="Captured Image", use_container_width=True)
-                    st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
+                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}", width=600)
+                    photo = None
+                    st.session_state.open_camera_name = None
         st.divider()
     
-    
-    if st.button("Download Laporan PDF (Belum dibuat)"):
-        st.session_state.form_submitted = False
+    if st.button("Reset"):
+        for key in st.session_state.keys():
+            del st.session_state[key]
         st.rerun()
+
+    if st.button("Download Laporan PDF (Belum dibuat)"):
+        st.text("Belum dibuat. Sabar!")
