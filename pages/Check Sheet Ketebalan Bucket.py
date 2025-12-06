@@ -89,11 +89,11 @@ if st.session_state.form_submitted:
             st.warning(f"""{idx+1}. {name}""")
             if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}"):
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
-                if photo is not None:
-                    image = Image.open(photo)
-                    warning_images.append(image)
-                    st.image(image, caption="Captured Image", use_container_width=True)
-                    st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
+            if photo is not None:
+                image = Image.open(photo)
+                warning_images.append(image)
+                st.image(image, caption="Captured Image", use_container_width=True)
+                st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
         st.divider()
         
     if bad_flags:
@@ -102,11 +102,11 @@ if st.session_state.form_submitted:
             st.error(f"""{idx+1}. {name}""")
             if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}"):
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
-                if photo is not None:
-                    image = Image.open(photo)
-                    warning_images.append(image)
-                    st.image(image, caption="Captured Image", use_container_width=True)
-                    st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
+            if photo is not None:
+                image = Image.open(photo)
+                warning_images.append(image)
+                st.image(image, caption="Captured Image", use_container_width=True)
+                st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
         st.divider()
     
     
