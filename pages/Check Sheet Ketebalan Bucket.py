@@ -12,6 +12,9 @@ if "form_submitted" not in st.session_state:
 if "open_camera_name" not in st.session_state:
     st.session_state.open_camera_name = None
 
+if "upload_image_name" not in st.session_state:
+    st.session_state.upload_image_name = False
+
 if "warning_images" not in st.session_state:
     st.session_state.warning_images = {}
 
@@ -67,6 +70,7 @@ if submitted:
     else:
         st.session_state.form_submitted = True
         st.session_state.open_camera_name = None
+        st.session_state.upload_image_name = False
         st.session_state.warning_images = {}
         st.session_state.bad_images = {}
         
@@ -106,12 +110,14 @@ if st.session_state.form_submitted:
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
                 if photo is not None:
-                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:"):
-                        image = Image.open(photo)
-                        st.session_state.warning_images[name] = image
-                        img_slot.image(image, caption="📷 Dokumentasi tersimpan: {name}")
-                        photo = None
-                        st.session_state.open_camera_name = None
+                    st.session_state.upload_image_name = True
+            if st.session_state.upload_image_name :
+                if st.button("Klik untuk menyimpan foto!", icon=":material/upload:"):
+                    image = Image.open(photo)
+                    st.session_state.warning_images[name] = image
+                    img_slot.image(image, caption="📷 Dokumentasi tersimpan: {name}")
+                    photo = None
+                    st.session_state.open_camera_name = None
         st.divider()
         
     if bad_flags:
@@ -133,7 +139,7 @@ if st.session_state.form_submitted:
                         img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
                         photo = None
                         st.session_state.open_camera_name = None
-            st.text_area("Masukkan Catatan")
+            st.text_area("Masukkan Catatan", key=f"bad_note_{idx}")
         st.divider()
     
     if st.button("Reset"):
