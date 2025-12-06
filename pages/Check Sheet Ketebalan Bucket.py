@@ -1,6 +1,7 @@
 import streamlit as st
 import sys, os
 import pandas as pd
+from PIL import Image
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from data_loader import page_config, load_bucket_data, load_bucket_target
 page_config()
@@ -9,7 +10,15 @@ bucket_data = load_bucket_data() # dict
 limit = 3
 bucket_target, bucket_target_snake = load_bucket_target() # list
 
-
+def create_doc(val):
+    if isinstance(val, str):
+        return "String"
+    elif isinstance(val, int):
+        return "Integer"
+    elif isinstance(val, float):
+        return "Float"
+    else:
+        return "Not all"
 
 
 st.title("Ketebalan Bucket")
@@ -59,24 +68,39 @@ if submitted:
         final_dict = dict(zip(bucket_target, list(temp_dict.values())))
             
         save_flags = [key for key, value in final_dict.items() if value == "👍 Good"]
+        
         warning_flags = [key for key, value in final_dict.items() if value == "⚠️ Warning"]
+        warning_images = []
+        
         bad_flags = [key for key, value in final_dict.items() if value == "❌ Bad"]
+        bad_images = []
         
         if not warning_flags and not bad_flags:
             st.success("All Success!")
         
         if warning_flags:
+            st.header("Warning")
             for idx, name in enumerate(warning_flags):
-                st.warning(f"""{idx+1}. {name}
-                        
-                        mungkin nanti harus upload bukti dokumentasi""")
+                st.warning(f"""{idx+1}. {name}""")
+                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
+                if photo is not None:
+                    image = Image.open(photo)
+                    warning_images.append(image)
+                    st.image(image, caption="Captured Image", use_container_width=True)
+                    st.success("✅ Photo captured successfully!")
             st.divider()
             
         if bad_flags:
+            st.header("Bad Condition / Tidak Teridentifikasi / Tidak Ada")
             for idx, name in enumerate(bad_flags):
-                st.error(f"""{idx+1}. {name}
-                        
-                        mungkin nanti harus upload bukti dokumentasi""")
+                st.error(f"""{idx+1}. {name}""")
+                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
+                if photo is not None:
+                    image = Image.open(photo)
+                    warning_images.append(image)
+                    st.image(image, caption="Captured Image", use_container_width=True)
+                    st.success("✅ Photo captured successfully!")
+            st.divider()
         
         
         st.button("Download Laporan PDF (Belum dibuat)")
