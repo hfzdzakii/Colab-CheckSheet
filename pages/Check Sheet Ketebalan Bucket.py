@@ -100,15 +100,15 @@ if st.session_state.form_submitted:
             img_slot = st.empty()
             saved_img = st.session_state.warning_images.get(name)
             if saved_img is not None:
-                img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=600)
-            if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}"):
+                img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}")
+            if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}", type="primary", icon=":material/camera:"):
                 st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
-                if photo is not None:
+                if photo is not None and st.button("Klik untuk menyimpan foto!", icon=":material/upload:"):
                     image = Image.open(photo)
                     st.session_state.warning_images[name] = image
-                    img_slot.image(image, caption="📷 Dokumentasi tersimpan: {name}", width=600)
+                    img_slot.image(image, caption="📷 Dokumentasi tersimpan: {name}")
                     photo = None
                     st.session_state.open_camera_name = None
         st.divider()
@@ -120,15 +120,15 @@ if st.session_state.form_submitted:
             img_slot = st.empty()
             saved_img = st.session_state.bad_images.get(name)
             if saved_img is not None:
-                img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=600)
-            if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}"):
+                img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}")
+            if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}", type="primary", icon=":material/camera:"):
                 st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
-                if photo is not None:
+                if photo is not None and st.button("Klik untuk menyimpan foto!", icon=":material/upload:"):
                     image = Image.open(photo)
                     st.session_state.bad_images[name] = image
-                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}", width=600)
+                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
                     photo = None
                     st.session_state.open_camera_name = None
         st.divider()
