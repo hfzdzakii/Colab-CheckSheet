@@ -46,13 +46,13 @@ with st.form("form_ketebalan_bucket"):
 
     submitted = st.form_submit_button("Save")
 
-if submitted:
-    required_fields = [
-        bucket_tooth, lock_bucket_tooth, adapter, choky_bar_top,
-        choky_bar_side, lip_shroud, base_plate, cutting_edge_top,
-        cutting_edge_bottom, wing_shroud, heels_shroud
-    ]
-    
+required_fields = [
+    bucket_tooth, lock_bucket_tooth, adapter, choky_bar_top,
+    choky_bar_side, lip_shroud, base_plate, cutting_edge_top,
+    cutting_edge_bottom, wing_shroud, heels_shroud
+]
+
+if submitted:    
     if any((field == "0" or field == None) for field in required_fields):
         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
     else:
