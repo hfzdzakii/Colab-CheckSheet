@@ -1,10 +1,14 @@
 import streamlit as st
 import sys, os, io
-import pandas as pd
+from pathlib import Path
 from PIL import Image
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from data_loader import page_config, load_bucket_data, load_bucket_target
 page_config()
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+IMAGES_DIR = BASE_DIR / "images"
+image_files = ["Body.png", "Bracket.png", "Get.png"]
 
 if "form_submitted" not in st.session_state:
     st.session_state.form_submitted = False
@@ -15,24 +19,27 @@ if "open_camera_name" not in st.session_state:
 if "warning_images" not in st.session_state:
     st.session_state.warning_images = {}
 
+if "warning_notes" not in st.session_state:
+    st.session_state.warning_notes = {}
+
 if "bad_images" not in st.session_state:
     st.session_state.bad_images = {}
+
+if "bad_notes" not in st.session_state:
+    st.session_state.bad_notes = {}
 
 bucket_data = load_bucket_data() # dict
 limit = 3
 bucket_target, bucket_target_snake = load_bucket_target() # list
 
-def create_doc(val):
-    if isinstance(val, str):
-        return "String"
-    elif isinstance(val, int):
-        return "Integer"
-    elif isinstance(val, float):
-        return "Float"
-    else:
-        return "Not all"
-
-
+with st.sidebar:
+    st.subheader("GET")
+    st.image(IMAGES_DIR / image_files[2])
+    st.subheader("Body")
+    st.image(IMAGES_DIR / image_files[0])
+    st.subheader("Bracket")
+    st.image(IMAGES_DIR / image_files[1])
+    
 st.title("Ketebalan Bucket")
 
 with st.form("form_ketebalan_bucket"):
@@ -42,14 +49,14 @@ with st.form("form_ketebalan_bucket"):
         bucket_tooth = st.radio("Bucket Tooth", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
         lock_bucket_tooth = st.radio("Lock, Bucket Tooth", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
         adapter = st.radio("Adapter", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
-        choky_bar_top = st.number_input("Choky Bar Top / Adapter Top Wear Plate", max_value=10, min_value=0)
+        choky_bar_top = st.number_input("Choky Bar Top / Adapter Top Wear Plate", max_value=10.0, min_value=0.0)
     with get2:
-        choky_bar_side = st.number_input("Choky Bar Side / Adapter Side Wear Plate", max_value=10, min_value=0)
+        choky_bar_side = st.number_input("Choky Bar Side / Adapter Side Wear Plate", max_value=10.0, min_value=0.0)
         lip_shroud = st.radio("Lip Shroud / Toplok", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
-        base_plate = st.number_input("Base Plate / Cutting Edge", max_value=90, min_value=0)
-        cutting_edge_top = st.number_input("Cutting Edge Top Wear Plate", max_value=12, min_value=0)
+        base_plate = st.number_input("Base Plate / Cutting Edge", max_value=90.0, min_value=0.0)
+        cutting_edge_top = st.number_input("Cutting Edge Top Wear Plate", max_value=12.0, min_value=0.0)
     with get3:
-        cutting_edge_bottom = st.number_input("Cutting Edge Bottom Wear Plate", max_value=16, min_value=0)
+        cutting_edge_bottom = st.number_input("Cutting Edge Bottom Wear Plate", max_value=16.0, min_value=0.0)
         wing_shroud = st.radio("Wing Shroud", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
         heels_shroud = st.radio("Heels Shroud", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
 
@@ -68,8 +75,9 @@ if submitted:
         st.session_state.form_submitted = True
         st.session_state.open_camera_name = None
         st.session_state.warning_images = {}
+        st.session_state.warning_notes = {}
         st.session_state.bad_images = {}
-        
+        st.session_state.bad_notes = {}        
     
 if st.session_state.form_submitted:
     temp_dict = dict(zip(bucket_target_snake, required_fields))
@@ -91,7 +99,7 @@ if st.session_state.form_submitted:
     bad_flags = [key for key, value in final_dict.items() if value == "❌ Bad"]
     
     if not warning_flags and not bad_flags:
-        st.success("All Success!")
+        st.success("Semua Aman!")
     
     if warning_flags:
         st.header("Warning")
@@ -101,7 +109,7 @@ if st.session_state.form_submitted:
             saved_img = st.session_state.warning_images.get(name)
             if saved_img is not None:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}")
-                if st.button("Klik untuk membuka Kamera - Ambil ulang gambar!", key=f"warning_button_edit_{idx}", type="tertiary", icon=":material/camera:"):
+                if st.button("Ambil ulang gambar!", key=f"warning_button_edit_{idx}", icon=":material/camera:"):
                     st.session_state.open_camera_name = name
             else :
                 if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}", type="primary", icon=":material/camera:"):
@@ -116,6 +124,8 @@ if st.session_state.form_submitted:
                         photo = None
                         st.session_state.open_camera_name = None
                         st.rerun()
+            txt = st.text_area("📝 Masukkan Catatan", key=f"warning_note_{idx}")
+            st.session_state.warning_notes[name] = txt
         st.divider()
         
     if bad_flags:
@@ -126,18 +136,23 @@ if st.session_state.form_submitted:
             saved_img = st.session_state.bad_images.get(name)
             if saved_img is not None:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}")
-            if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}", type="primary", icon=":material/camera:"):
-                st.session_state.open_camera_name = name
+                if st.button("Ambil ulang gambar!", key=f"bad_button_edit_{idx}", icon=":material/camera:"):
+                    st.session_state.open_camera_name = name
+            else:
+                if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}", type="primary", icon=":material/camera:"):
+                    st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
                 if photo is not None:
-                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:"):
+                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"bad_upload_{idx}"):
                         image = Image.open(photo)
                         st.session_state.bad_images[name] = image
                         img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
                         photo = None
                         st.session_state.open_camera_name = None
-            st.text_area("Masukkan Catatan", key=f"bad_note_{idx}")
+                        st.rerun()
+            txt = st.text_area("Masukkan Catatan", key=f"bad_note_{idx}")
+            st.session_state.bad_notes[name] = txt
         st.divider()
     
     if st.button("Reset"):

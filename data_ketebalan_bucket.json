@@ -1,94 +1,94 @@
 {
     "GET": {
         "choky_bar_top": {
-            "std": 10,
-            "min": 5
+            "std": 10.0,
+            "min": 5.0
         },
         "choky_bar_side": {
-            "std": 10,
-            "min": 5
+            "std": 10.0,
+            "min": 5.0
         },
         "base_plate": {
-            "std": 90,
-            "min": 63
+            "std": 90.0,
+            "min": 63.0
         },
         "cutting_edge_top": {
-            "std": 12,
-            "min": 5
+            "std": 12.0,
+            "min": 5.0
         },
         "cutting_edge_bottom": {
-            "std": 16,
-            "min": 5
+            "std": 16.0,
+            "min": 5.0
         }
     },
     "BODY_SKIN": {
         "bucket_skin_inner_wear_plate": {
-            "std": 12,
-            "min": 5
+            "std": 12.0,
+            "min": 5.0
         },
         "body_skin_bucket_skin": {
-            "std": 16,
+            "std": 16.0,
             "min": 11.2
         },
         "bucket_skin_outer_wear_plate_1": {
-            "std": 16,
-            "min": 5
+            "std": 16.0,
+            "min": 5.0
         },
         "bucket_skin_outer_wear_plate_2": {
-            "std": 16,
-            "min": 5
+            "std": 16.0,
+            "min": 5.0
         },
         "outer_frame_wear_plate_1": {
-            "std": 12,
-            "min": 5
+            "std": 12.0,
+            "min": 5.0
         },
         "outer_frame_wear_plate_2": {
-            "std": 12,
-            "min": 5
+            "std": 12.0,
+            "min": 5.0
         }
     },
     "RH": {
         "side_wall": {
-            "std": 16,
+            "std": 16.0,
             "min": 11.2
         },
         "side_wall_inner_wear_plate": {
-            "std": 12,
-            "min": 5
+            "std": 12.0,
+            "min": 5.0
         },
         "side_wall_outer_wear_plate_1": {
-            "std": 12,
-            "min": 5
+            "std": 12.0,
+            "min": 5.0
         },
         "side_wall_outer_wear_plate_2": {
-            "std": 16,
-            "min": 5
+            "std": 16.0,
+            "min": 5.0
         },
         "side_cutter": {
-            "std": 70,
-            "min": 49
+            "std": 70.0,
+            "min": 49.0
         }
     },
     "LH": {
         "side_wall": {
-            "std": 16,
+            "std": 16.0,
             "min": 11.2
         },
         "side_wall_inner_wear_plate": {
-            "std": 12,
-            "min": 5
+            "std": 12.0,
+            "min": 5.0
         },
         "side_wall_outer_wear_plate_1": {
-            "std": 12,
-            "min": 5
+            "std": 12.0,
+            "min": 5.0
         },
         "side_wall_outer_wear_plate_2": {
-            "std": 16,
-            "min": 5
+            "std": 16.0,
+            "min": 5.0
         },
         "side_cutter": {
-            "std": 70,
-            "min": 49
+            "std": 70.0,
+            "min": 49.0
         }
     }
 }
