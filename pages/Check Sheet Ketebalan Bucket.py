@@ -105,12 +105,13 @@ if st.session_state.form_submitted:
                 st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
-                if photo is not None and st.button("Klik untuk menyimpan foto!", icon=":material/upload:"):
-                    image = Image.open(photo)
-                    st.session_state.warning_images[name] = image
-                    img_slot.image(image, caption="📷 Dokumentasi tersimpan: {name}")
-                    photo = None
-                    st.session_state.open_camera_name = None
+                if photo is not None:
+                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:"):
+                        image = Image.open(photo)
+                        st.session_state.warning_images[name] = image
+                        img_slot.image(image, caption="📷 Dokumentasi tersimpan: {name}")
+                        photo = None
+                        st.session_state.open_camera_name = None
         st.divider()
         
     if bad_flags:
@@ -125,12 +126,13 @@ if st.session_state.form_submitted:
                 st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
-                if photo is not None and st.button("Klik untuk menyimpan foto!", icon=":material/upload:"):
-                    image = Image.open(photo)
-                    st.session_state.bad_images[name] = image
-                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
-                    photo = None
-                    st.session_state.open_camera_name = None
+                if photo is not None:
+                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:"):
+                        image = Image.open(photo)
+                        st.session_state.bad_images[name] = image
+                        img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
+                        photo = None
+                        st.session_state.open_camera_name = None
         st.divider()
     
     if st.button("Reset"):
