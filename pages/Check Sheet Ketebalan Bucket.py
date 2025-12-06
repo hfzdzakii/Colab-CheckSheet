@@ -1,5 +1,5 @@
 import streamlit as st
-import sys, os
+import sys, os, io
 import pandas as pd
 from PIL import Image
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -14,6 +14,9 @@ if "open_camera_name" not in st.session_state:
 
 if "upload_image_name" not in st.session_state:
     st.session_state.upload_image_name = False
+    
+if "upload_image_buffer" not in st.session_state:
+    st.session_state.upload_image_buffer = None
 
 if "warning_images" not in st.session_state:
     st.session_state.warning_images = {}
@@ -111,14 +114,17 @@ if st.session_state.form_submitted:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
                 if photo is not None:
                     st.session_state.upload_image_name = True
+                    st.session_state.upload_image_buffer = photo
+                    buf = st.session_state.upload_image_buffer
             if st.session_state.upload_image_name :
-                if st.button("Klik untuk menyimpan foto!", icon=":material/upload:"):
-                    image = Image.open(photo)
+                if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"warning_upload_{idx}"):
+                    image = Image.open(io.BytesIO(buf.getvalue()))
                     st.session_state.warning_images[name] = image
                     img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
                     photo = None
                     st.session_state.open_camera_name = None
                     st.session_state.upload_image_name = False
+                    st.session_state.upload_image_buffer = None
         st.divider()
         
     if bad_flags:
