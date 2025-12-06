@@ -87,24 +87,26 @@ if st.session_state.form_submitted:
         st.header("Warning")
         for idx, name in enumerate(warning_flags):
             st.warning(f"""{idx+1}. {name}""")
-            photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
-            if photo is not None:
-                image = Image.open(photo)
-                warning_images.append(image)
-                st.image(image, caption="Captured Image", use_container_width=True)
-                st.success("✅ Photo captured successfully!")
+            if st.button("Klik untuk membuka Kamera!"):
+                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
+                if photo is not None:
+                    image = Image.open(photo)
+                    warning_images.append(image)
+                    st.image(image, caption="Captured Image", use_container_width=True)
+                    st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
         st.divider()
         
     if bad_flags:
         st.header("Bad Condition / Tidak Teridentifikasi / Tidak Ada")
         for idx, name in enumerate(bad_flags):
             st.error(f"""{idx+1}. {name}""")
-            photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
-            if photo is not None:
-                image = Image.open(photo)
-                warning_images.append(image)
-                st.image(image, caption="Captured Image", use_container_width=True)
-                st.success("✅ Photo captured successfully!")
+            if st.button("Klik untuk membuka Kamera!"):
+                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
+                if photo is not None:
+                    image = Image.open(photo)
+                    warning_images.append(image)
+                    st.image(image, caption="Captured Image", use_container_width=True)
+                    st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
         st.divider()
     
     
