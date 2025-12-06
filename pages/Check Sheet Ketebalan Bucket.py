@@ -12,12 +12,6 @@ if "form_submitted" not in st.session_state:
 if "open_camera_name" not in st.session_state:
     st.session_state.open_camera_name = None
 
-if "upload_image_name" not in st.session_state:
-    st.session_state.upload_image_name = False
-    
-if "upload_image_buffer" not in st.session_state:
-    st.session_state.upload_image_buffer = None
-
 if "warning_images" not in st.session_state:
     st.session_state.warning_images = {}
 
@@ -73,7 +67,6 @@ if submitted:
     else:
         st.session_state.form_submitted = True
         st.session_state.open_camera_name = None
-        st.session_state.upload_image_name = False
         st.session_state.warning_images = {}
         st.session_state.bad_images = {}
         
@@ -113,19 +106,13 @@ if st.session_state.form_submitted:
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
                 if photo is not None:
-                    st.session_state.upload_image_name = True
-                    st.session_state.upload_image_buffer = photo
-                    buf = st.session_state.upload_image_buffer
-            if st.session_state.upload_image_name :
-                if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"warning_upload_{idx}"):
-                    image = Image.open(io.BytesIO(buf.getvalue()))
-                    st.session_state.warning_images[name] = image
-                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
-                    photo = None
-                    st.session_state.open_camera_name = None
-                    st.session_state.upload_image_name = False
-                    st.session_state.upload_image_buffer = None
-                    st.rerun()
+                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"warning_upload_{idx}"):
+                        image = Image.open(photo)
+                        st.session_state.warning_images[name] = image
+                        img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
+                        photo = None
+                        st.session_state.open_camera_name = None
+                        st.rerun()
         st.divider()
         
     if bad_flags:
