@@ -22,7 +22,7 @@
         }
     },
     "BODY_SKIN": {
-        "bucket_skin_inner_wear_plate": {
+        "bucket_skin_inner": {
             "std": 12.0,
             "min": 5.0
         },
@@ -30,63 +30,63 @@
             "std": 16.0,
             "min": 11.2
         },
-        "bucket_skin_outer_wear_plate_1": {
+        "bucket_skin_outer_1": {
             "std": 16.0,
             "min": 5.0
         },
-        "bucket_skin_outer_wear_plate_2": {
+        "bucket_skin_outer_2": {
             "std": 16.0,
             "min": 5.0
         },
-        "outer_frame_wear_plate_1": {
+        "outer_frame_1": {
             "std": 12.0,
             "min": 5.0
         },
-        "outer_frame_wear_plate_2": {
+        "outer_frame_2": {
             "std": 12.0,
             "min": 5.0
         }
     },
     "RH": {
-        "side_wall": {
+        "side_wall_rh": {
             "std": 16.0,
             "min": 11.2
         },
-        "side_wall_inner_wear_plate": {
+        "side_wall_inner_rh": {
             "std": 12.0,
             "min": 5.0
         },
-        "side_wall_outer_wear_plate_1": {
+        "side_wall_outer_1_rh": {
             "std": 12.0,
             "min": 5.0
         },
-        "side_wall_outer_wear_plate_2": {
+        "side_wall_outer_2_rh": {
             "std": 16.0,
             "min": 5.0
         },
-        "side_cutter": {
+        "side_cutter_rh": {
             "std": 70.0,
             "min": 49.0
         }
     },
     "LH": {
-        "side_wall": {
+        "side_wall_lh": {
             "std": 16.0,
             "min": 11.2
         },
-        "side_wall_inner_wear_plate": {
+        "side_wall_inner_lh": {
             "std": 12.0,
             "min": 5.0
         },
-        "side_wall_outer_wear_plate_1": {
+        "side_wall_outer_1_lh": {
             "std": 12.0,
             "min": 5.0
         },
-        "side_wall_outer_wear_plate_2": {
+        "side_wall_outer_2_lh": {
             "std": 16.0,
             "min": 5.0
         },
-        "side_cutter": {
+        "side_cutter_lh": {
             "std": 70.0,
             "min": 49.0
         }
