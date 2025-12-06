@@ -6,6 +6,9 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from data_loader import page_config, load_bucket_data, load_bucket_target
 page_config()
 
+if "form_submitted" not in st.session_state:
+    st.session_state.form_submitted = False
+
 bucket_data = load_bucket_data() # dict
 limit = 3
 bucket_target, bucket_target_snake = load_bucket_target() # list
@@ -53,55 +56,60 @@ if submitted:
     if any((field == "0" or field == None) for field in required_fields):
         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
     else:
-        temp_dict = dict(zip(bucket_target_snake, required_fields))
+        st.session_state.form_submitted = True
+    
+if st.session_state.form_submitted:
+    temp_dict = dict(zip(bucket_target_snake, required_fields))
+    check_fields_values = list(bucket_data["GET"].keys()) # int / float
         
-        check_fields_values = list(bucket_data["GET"].keys()) # int / float
+    for field_name in check_fields_values:
+        if temp_dict[field_name] > bucket_data["GET"][field_name]["min"] + 3:
+            temp_dict[field_name] = "👍 Good"
+        elif temp_dict[field_name] > bucket_data["GET"][field_name]["min"]:
+            temp_dict[field_name] = "⚠️ Warning"
+        else:
+            temp_dict[field_name] = "❌ Bad"
             
-        for field_name in check_fields_values:
-            if temp_dict[field_name] > bucket_data["GET"][field_name]["min"] + 3:
-                temp_dict[field_name] = "👍 Good"
-            elif temp_dict[field_name] > bucket_data["GET"][field_name]["min"]:
-                temp_dict[field_name] = "⚠️ Warning"
-            else:
-                temp_dict[field_name] = "❌ Bad"
-                
-        final_dict = dict(zip(bucket_target, list(temp_dict.values())))
-            
-        save_flags = [key for key, value in final_dict.items() if value == "👍 Good"]
+    final_dict = dict(zip(bucket_target, list(temp_dict.values())))
         
-        warning_flags = [key for key, value in final_dict.items() if value == "⚠️ Warning"]
-        warning_images = []
+    save_flags = [key for key, value in final_dict.items() if value == "👍 Good"]
+    
+    warning_flags = [key for key, value in final_dict.items() if value == "⚠️ Warning"]
+    warning_images = []
+    
+    bad_flags = [key for key, value in final_dict.items() if value == "❌ Bad"]
+    bad_images = []
+    
+    if not warning_flags and not bad_flags:
+        st.success("All Success!")
+    
+    if warning_flags:
+        st.header("Warning")
+        for idx, name in enumerate(warning_flags):
+            st.warning(f"""{idx+1}. {name}""")
+            photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
+            if photo is not None:
+                image = Image.open(photo)
+                warning_images.append(image)
+                st.image(image, caption="Captured Image", use_container_width=True)
+                st.success("✅ Photo captured successfully!")
+        st.divider()
         
-        bad_flags = [key for key, value in final_dict.items() if value == "❌ Bad"]
-        bad_images = []
+    if bad_flags:
+        st.header("Bad Condition / Tidak Teridentifikasi / Tidak Ada")
+        for idx, name in enumerate(bad_flags):
+            st.error(f"""{idx+1}. {name}""")
+            photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
+            if photo is not None:
+                image = Image.open(photo)
+                warning_images.append(image)
+                st.image(image, caption="Captured Image", use_container_width=True)
+                st.success("✅ Photo captured successfully!")
+        st.divider()
+    
+    
+    if st.button("Download Laporan PDF (Belum dibuat)"):
+        st.session_state.form_submitted = False
+        st.rerun()
         
-        if not warning_flags and not bad_flags:
-            st.success("All Success!")
-        
-        if warning_flags:
-            st.header("Warning")
-            for idx, name in enumerate(warning_flags):
-                st.warning(f"""{idx+1}. {name}""")
-                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
-                if photo is not None:
-                    image = Image.open(photo)
-                    warning_images.append(image)
-                    st.image(image, caption="Captured Image", use_container_width=True)
-                    st.success("✅ Photo captured successfully!")
-            st.divider()
-            
-        if bad_flags:
-            st.header("Bad Condition / Tidak Teridentifikasi / Tidak Ada")
-            for idx, name in enumerate(bad_flags):
-                st.error(f"""{idx+1}. {name}""")
-                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
-                if photo is not None:
-                    image = Image.open(photo)
-                    warning_images.append(image)
-                    st.image(image, caption="Captured Image", use_container_width=True)
-                    st.success("✅ Photo captured successfully!")
-            st.divider()
-        
-        
-        st.button("Download Laporan PDF (Belum dibuat)")
-        
+    
