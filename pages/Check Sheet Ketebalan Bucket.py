@@ -8,6 +8,13 @@ page_config()
 
 if "form_submitted" not in st.session_state:
     st.session_state.form_submitted = False
+    
+if "open_camera_name" not in st.session_state:
+    st.session_state.open_camera_name = None
+
+if "warning_images" not in st.session_state:
+    st.session_state.warning_images = {}
+
 
 bucket_data = load_bucket_data() # dict
 limit = 3
@@ -86,27 +93,31 @@ if st.session_state.form_submitted:
     if warning_flags:
         st.header("Warning")
         for idx, name in enumerate(warning_flags):
-            st.warning(f"""{idx+1}. {name}""")
+            st.warning(f"{idx+1}. {name}")
             if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}"):
+                st.session_state.open_camera_name = name
+            if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
-            if photo is not None:
-                image = Image.open(photo)
-                warning_images.append(image)
-                st.image(image, caption="Captured Image", use_container_width=True)
-                st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
+                if photo is not None:
+                    image = Image.open(photo)
+                    warning_images.append(image)
+                    st.image(image, caption="Captured Image", use_container_width=True)
+                    st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
         st.divider()
         
     if bad_flags:
         st.header("Bad Condition / Tidak Teridentifikasi / Tidak Ada")
         for idx, name in enumerate(bad_flags):
-            st.error(f"""{idx+1}. {name}""")
+            st.error(f"{idx+1}. {name}")
             if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}"):
+                st.session_state.open_camera_name = name
+            if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
-            if photo is not None:
-                image = Image.open(photo)
-                warning_images.append(image)
-                st.image(image, caption="Captured Image", use_container_width=True)
-                st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
+                if photo is not None:
+                    image = Image.open(photo)
+                    warning_images.append(image)
+                    st.image(image, caption="Captured Image", use_container_width=True)
+                    st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
         st.divider()
     
     
