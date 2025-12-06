@@ -133,6 +133,7 @@ if st.session_state.form_submitted:
                         img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
                         photo = None
                         st.session_state.open_camera_name = None
+            st.text_area("Masukkan Catatan")
         st.divider()
     
     if st.button("Reset"):
