@@ -15,6 +15,8 @@ if "open_camera_name" not in st.session_state:
 if "warning_images" not in st.session_state:
     st.session_state.warning_images = {}
 
+if "bad_images" not in st.session_state:
+    st.session_state.bad_images = {}
 
 bucket_data = load_bucket_data() # dict
 limit = 3
@@ -82,10 +84,7 @@ if st.session_state.form_submitted:
     save_flags = [key for key, value in final_dict.items() if value == "👍 Good"]
     
     warning_flags = [key for key, value in final_dict.items() if value == "⚠️ Warning"]
-    warning_images = []
-    
     bad_flags = [key for key, value in final_dict.items() if value == "❌ Bad"]
-    bad_images = []
     
     if not warning_flags and not bad_flags:
         st.success("All Success!")
@@ -94,14 +93,18 @@ if st.session_state.form_submitted:
         st.header("Warning")
         for idx, name in enumerate(warning_flags):
             st.warning(f"{idx+1}. {name}")
+            img_slot = st.empty()
+            saved_img = st.session_state.warning_images.get(name)
+            if saved_img is not None:
+                img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", use_container_width=True)
             if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}"):
                 st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
                 if photo is not None:
                     image = Image.open(photo)
-                    warning_images.append(image)
-                    st.image(image, caption="Captured Image", use_container_width=True)
+                    st.session_state.warning_images[name] = image
+                    img_slot.image(image, caption="📷 Dokumentasi tersimpan: {name}", use_container_width=True)
                     st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
         st.divider()
         
@@ -109,14 +112,18 @@ if st.session_state.form_submitted:
         st.header("Bad Condition / Tidak Teridentifikasi / Tidak Ada")
         for idx, name in enumerate(bad_flags):
             st.error(f"{idx+1}. {name}")
+            img_slot = st.empty()
+            saved_img = st.session_state.bad_images.get(name)
+            if saved_img is not None:
+                img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", use_container_width=True)
             if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}"):
                 st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
                 if photo is not None:
                     image = Image.open(photo)
-                    warning_images.append(image)
-                    st.image(image, caption="Captured Image", use_container_width=True)
+                    st.session_state.bad_images[name] = image
+                    img_slot.image(image, caption="Captured Image", use_container_width=True)
                     st.success(f"✅ Foto dokumentasi {name} berhasil diupload!")
         st.divider()
     
@@ -124,5 +131,3 @@ if st.session_state.form_submitted:
     if st.button("Download Laporan PDF (Belum dibuat)"):
         st.session_state.form_submitted = False
         st.rerun()
-        
-    
