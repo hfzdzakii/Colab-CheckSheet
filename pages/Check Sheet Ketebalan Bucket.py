@@ -115,9 +115,10 @@ if st.session_state.form_submitted:
                 if st.button("Klik untuk menyimpan foto!", icon=":material/upload:"):
                     image = Image.open(photo)
                     st.session_state.warning_images[name] = image
-                    img_slot.image(image, caption="📷 Dokumentasi tersimpan: {name}")
+                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
                     photo = None
                     st.session_state.open_camera_name = None
+                    st.session_state.upload_image_name = False
         st.divider()
         
     if bad_flags:
