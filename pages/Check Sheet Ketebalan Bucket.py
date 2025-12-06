@@ -108,9 +108,6 @@ if st.session_state.form_submitted:
             saved_img = st.session_state.warning_images.get(name)
             if saved_img is not None:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}")
-                st.session_state.open_camera_name = None
-                st.session_state.upload_image_name = False
-                st.session_state.upload_image_buffer = None
             if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}", type="primary", icon=":material/camera:"):
                 st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
@@ -125,6 +122,10 @@ if st.session_state.form_submitted:
                     st.session_state.warning_images[name] = image
                     img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
                     photo = None
+                    st.session_state.open_camera_name = None
+                    st.session_state.upload_image_name = False
+                    st.session_state.upload_image_buffer = None
+                    st.rerun()
         st.divider()
         
     if bad_flags:
