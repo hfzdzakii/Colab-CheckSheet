@@ -87,8 +87,8 @@ if st.session_state.form_submitted:
         st.header("Warning")
         for idx, name in enumerate(warning_flags):
             st.warning(f"""{idx+1}. {name}""")
-            if st.button("Klik untuk membuka Kamera!"):
-                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
+            if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}"):
+                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
                 if photo is not None:
                     image = Image.open(photo)
                     warning_images.append(image)
@@ -100,8 +100,8 @@ if st.session_state.form_submitted:
         st.header("Bad Condition / Tidak Teridentifikasi / Tidak Ada")
         for idx, name in enumerate(bad_flags):
             st.error(f"""{idx+1}. {name}""")
-            if st.button("Klik untuk membuka Kamera!"):
-                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"cam_{idx}")
+            if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}"):
+                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
                 if photo is not None:
                     image = Image.open(photo)
                     warning_images.append(image)
