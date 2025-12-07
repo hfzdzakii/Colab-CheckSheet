@@ -77,7 +77,7 @@ if st.session_state.form_submitted:
             temp_dict[field_name] = "❌ Bad"
             
     final_dict = dict(zip(bucket_target, list(temp_dict.values())))
-        
+            
     safe_flags = [key for key, value in final_dict.items() if value == "👍 Good"]
     warning_flags = [key for key, value in final_dict.items() if value == "⚠️ Warning"]
     bad_flags = [key for key, value in final_dict.items() if value == "❌ Bad"]
@@ -89,7 +89,7 @@ if st.session_state.form_submitted:
         st.header("⚠️ Warning")
         for idx, name in enumerate(warning_flags):
             st.warning(f"{idx+1}. {name}")
-            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"warning_note_{idx}")
+            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"warning_note_{idx}", value="-")
             st.session_state.warning_notes[name] = txt
             img_slot = st.empty()
             saved_img = st.session_state.warning_images.get(name)
@@ -116,7 +116,7 @@ if st.session_state.form_submitted:
         st.header("❌ Bad Condition / Tidak Teridentifikasi / Tidak Ada")
         for idx, name in enumerate(bad_flags):
             st.error(f"{idx+1}. {name}")
-            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"bad_note_{idx}")
+            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"bad_note_{idx}", value="-")
             st.session_state.bad_notes[name] = txt
             img_slot = st.empty()
             saved_img = st.session_state.bad_images.get(name)
@@ -143,7 +143,7 @@ if st.session_state.form_submitted:
         reset_confirmation()
 
     if st.button("📄 Download Laporan PDF!"):
-        pdf_buffer = create_report_bucket_thickness(zip(bucket_target, required_fields), 
+        pdf_buffer = create_report_bucket_thickness(dict(zip(bucket_target, required_fields)), 
                                                     safe_flags, warning_flags, bad_flags, 
                                                     st.session_state.warning_images,
                                                     st.session_state.bad_images,
