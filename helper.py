@@ -1,6 +1,11 @@
 import streamlit as st
-from dataclasses import dataclass, field
 import time
+import tempfile
+from dataclasses import dataclass, field
+from reportlab.platypus import SimpleDocTemplate, Image as RLImage, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import A4
+from io import BytesIO
 
 def page_config():
     return st.set_page_config(
@@ -45,3 +50,15 @@ def reset_confirmation():
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+        
+def create_report_bucket_thickness(s_flags, w_flags, b_flags, w_imgs, b_imgs, w_notes, b_notes):
+    if len(w_flags) == 0 and len(b_flags) == 0:
+        pass # Show semua Safe Flags
+    else:
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=A4)
+        styles = getSampleStyleSheet()
+        elements = []
+        
+        elements.append(Paragraph("Laporan Ketebalan Bucket", styles["Title"]))
+        elements.append(Spacer(1, 20))

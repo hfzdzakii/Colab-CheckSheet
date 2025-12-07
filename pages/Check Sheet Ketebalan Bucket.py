@@ -1,5 +1,5 @@
 import streamlit as st
-import sys, os, io
+import sys, os
 from pathlib import Path
 from PIL import Image
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -10,24 +10,6 @@ page_config()
 BASE_DIR = Path(__file__).resolve().parents[1]
 IMAGES_DIR = BASE_DIR / "images"
 image_files = ["Body.png", "Bracket.png", "Get.png"]
-
-# if "form_submitted" not in st.session_state:
-#     st.session_state.form_submitted = False
-    
-# if "open_camera_name" not in st.session_state:
-#     st.session_state.open_camera_name = None
-
-# if "warning_images" not in st.session_state:
-#     st.session_state.warning_images = {}
-
-# if "warning_notes" not in st.session_state:
-#     st.session_state.warning_notes = {}
-
-# if "bad_images" not in st.session_state:
-#     st.session_state.bad_images = {}
-
-# if "bad_notes" not in st.session_state:
-#     st.session_state.bad_notes = {}
 
 state_bucket_thickness = init_state_bucket_thickness()
 
@@ -72,7 +54,7 @@ required_fields = [
 ]
 
 if submitted:    
-    if any((field == "0.00" or field == None) for field in required_fields):
+    if any((field == 0.00 or field == None) for field in required_fields):
         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
     else:
         st.session_state.form_submitted = True
@@ -97,7 +79,6 @@ if st.session_state.form_submitted:
     final_dict = dict(zip(bucket_target, list(temp_dict.values())))
         
     save_flags = [key for key, value in final_dict.items() if value == "👍 Good"]
-    
     warning_flags = [key for key, value in final_dict.items() if value == "⚠️ Warning"]
     bad_flags = [key for key, value in final_dict.items() if value == "❌ Bad"]
     
@@ -108,6 +89,8 @@ if st.session_state.form_submitted:
         st.header("⚠️ Warning")
         for idx, name in enumerate(warning_flags):
             st.warning(f"{idx+1}. {name}")
+            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"warning_note_{idx}")
+            st.session_state.warning_notes[name] = txt
             img_slot = st.empty()
             saved_img = st.session_state.warning_images.get(name)
             if saved_img is not None:
@@ -127,14 +110,14 @@ if st.session_state.form_submitted:
                         photo = None
                         st.session_state.open_camera_name = None
                         st.rerun()
-            txt = st.text_area("📝 Masukkan Catatan", key=f"warning_note_{idx}")
-            st.session_state.warning_notes[name] = txt
         st.divider()
         
     if bad_flags:
         st.header("❌ Bad Condition / Tidak Teridentifikasi / Tidak Ada")
         for idx, name in enumerate(bad_flags):
             st.error(f"{idx+1}. {name}")
+            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"bad_note_{idx}")
+            st.session_state.bad_notes[name] = txt
             img_slot = st.empty()
             saved_img = st.session_state.bad_images.get(name)
             if saved_img is not None:
@@ -154,12 +137,14 @@ if st.session_state.form_submitted:
                         photo = None
                         st.session_state.open_camera_name = None
                         st.rerun()
-            txt = st.text_area("Masukkan Catatan", key=f"bad_note_{idx}")
-            st.session_state.bad_notes[name] = txt
         st.divider()
     
     if st.button("Reset"):
         reset_confirmation()
 
-    if st.button("Download Laporan PDF (Belum dibuat)"):
+    if st.button("📄 Download Laporan PDF!"):
         st.text("Belum dibuat. Sabar!")
+        st.write(save_flags)
+        st.write(warning_flags)
+        st.write(st.session_state)
+        
