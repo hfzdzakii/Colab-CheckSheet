@@ -5,11 +5,11 @@ import streamlit as st
 DATA_PATH = Path(__file__).with_name("data_ketebalan_bucket.json")
 
 @st.cache_data
-def load_bucket_data():
+def load_bucket_thickness_data():
     with open(DATA_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
     
-def load_bucket_target():
+def load_bucket_thickness_target():
     return [
         "Bucket Tooth",
         "Lock, Bucket Tooth",
@@ -27,11 +27,3 @@ def load_bucket_target():
         "choky_bar_side", "lip_shroud", "base_plate", "cutting_edge_top",
         "cutting_edge_bottom", "wing_shroud", "heels_shroud"
     ]
-
-
-def page_config():
-    return st.set_page_config(
-            page_title="Bucket Parts App",
-            layout="wide",
-            initial_sidebar_state="expanded",
-        )

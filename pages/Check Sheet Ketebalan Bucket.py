@@ -3,34 +3,37 @@ import sys, os, io
 from pathlib import Path
 from PIL import Image
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from data_loader import page_config, load_bucket_data, load_bucket_target
+from data_loader import load_bucket_thickness_data, load_bucket_thickness_target
+from helper import page_config, init_state_bucket_thickness, input_number, input_radio, reset_confirmation
 page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 IMAGES_DIR = BASE_DIR / "images"
 image_files = ["Body.png", "Bracket.png", "Get.png"]
 
-if "form_submitted" not in st.session_state:
-    st.session_state.form_submitted = False
+# if "form_submitted" not in st.session_state:
+#     st.session_state.form_submitted = False
     
-if "open_camera_name" not in st.session_state:
-    st.session_state.open_camera_name = None
+# if "open_camera_name" not in st.session_state:
+#     st.session_state.open_camera_name = None
 
-if "warning_images" not in st.session_state:
-    st.session_state.warning_images = {}
+# if "warning_images" not in st.session_state:
+#     st.session_state.warning_images = {}
 
-if "warning_notes" not in st.session_state:
-    st.session_state.warning_notes = {}
+# if "warning_notes" not in st.session_state:
+#     st.session_state.warning_notes = {}
 
-if "bad_images" not in st.session_state:
-    st.session_state.bad_images = {}
+# if "bad_images" not in st.session_state:
+#     st.session_state.bad_images = {}
 
-if "bad_notes" not in st.session_state:
-    st.session_state.bad_notes = {}
+# if "bad_notes" not in st.session_state:
+#     st.session_state.bad_notes = {}
 
-bucket_data = load_bucket_data() # dict
+state_bucket_thickness = init_state_bucket_thickness()
+
+bucket_data = load_bucket_thickness_data() # dict
 limit = 3
-bucket_target, bucket_target_snake = load_bucket_target() # list
+bucket_target, bucket_target_snake = load_bucket_thickness_target() # list
 
 with st.sidebar:
     st.subheader("GET")
@@ -46,19 +49,19 @@ with st.form("form_ketebalan_bucket"):
     st.header("GET")
     get1, get2, get3 = st.columns(3)
     with get1:
-        bucket_tooth = st.radio("Bucket Tooth", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
-        lock_bucket_tooth = st.radio("Lock, Bucket Tooth", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
-        adapter = st.radio("Adapter", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
-        choky_bar_top = st.number_input("Choky Bar Top / Adapter Top Wear Plate", max_value=10.0, min_value=0.0)
+        bucket_tooth = input_radio("1. Bucket Tooth")
+        lock_bucket_tooth = input_radio("2. Lock, Bucket Tooth")
+        adapter = input_radio("3. Adapter")
+        choky_bar_top = input_number("4. Choky Bar Top / Adapter Top Wear Plate", max=10.0)
     with get2:
-        choky_bar_side = st.number_input("Choky Bar Side / Adapter Side Wear Plate", max_value=10.0, min_value=0.0)
-        lip_shroud = st.radio("Lip Shroud / Toplok", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
-        base_plate = st.number_input("Base Plate / Cutting Edge", max_value=90.0, min_value=0.0)
-        cutting_edge_top = st.number_input("Cutting Edge Top Wear Plate", max_value=12.0, min_value=0.0)
+        choky_bar_side = input_number("5. Choky Bar Side / Adapter Side Wear Plate", max=10.0)
+        lip_shroud = input_radio("6. Lip Shroud / Toplok")
+        base_plate = input_number("7. Base Plate / Cutting Edge", max=90.0)
+        cutting_edge_top = input_number("8. Cutting Edge Top Wear Plate", max=12.0)
     with get3:
-        cutting_edge_bottom = st.number_input("Cutting Edge Bottom Wear Plate", max_value=16.0, min_value=0.0)
-        wing_shroud = st.radio("Wing Shroud", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
-        heels_shroud = st.radio("Heels Shroud", ["👍 Good", "❌ Bad"], horizontal=True, index=None)
+        cutting_edge_bottom = input_number("9. Cutting Edge Bottom Wear Plate", max=16.0)
+        wing_shroud = input_radio("10. Wing Shroud")
+        heels_shroud = input_radio("11. Heels Shroud")
 
     submitted = st.form_submit_button("Save")
 
@@ -69,7 +72,7 @@ required_fields = [
 ]
 
 if submitted:    
-    if any((field == "0" or field == None) for field in required_fields):
+    if any((field == "0.0" or field == None) for field in required_fields):
         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
     else:
         st.session_state.form_submitted = True
@@ -99,10 +102,10 @@ if st.session_state.form_submitted:
     bad_flags = [key for key, value in final_dict.items() if value == "❌ Bad"]
     
     if not warning_flags and not bad_flags:
-        st.success("Semua Aman!")
+        st.success("👍 Semua Aman!")
     
     if warning_flags:
-        st.header("Warning")
+        st.header("⚠️ Warning")
         for idx, name in enumerate(warning_flags):
             st.warning(f"{idx+1}. {name}")
             img_slot = st.empty()
@@ -129,7 +132,7 @@ if st.session_state.form_submitted:
         st.divider()
         
     if bad_flags:
-        st.header("Bad Condition / Tidak Teridentifikasi / Tidak Ada")
+        st.header("❌ Bad Condition / Tidak Teridentifikasi / Tidak Ada")
         for idx, name in enumerate(bad_flags):
             st.error(f"{idx+1}. {name}")
             img_slot = st.empty()
@@ -156,9 +159,7 @@ if st.session_state.form_submitted:
         st.divider()
     
     if st.button("Reset"):
-        for key in st.session_state.keys():
-            del st.session_state[key]
-        st.rerun()
+        reset_confirmation()
 
     if st.button("Download Laporan PDF (Belum dibuat)"):
         st.text("Belum dibuat. Sabar!")
