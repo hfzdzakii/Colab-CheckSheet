@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from data_loader import load_bucket_thickness_data, load_bucket_thickness_target
-from helper import page_config, init_state_bucket_thickness, input_number, input_radio, reset_confirmation
+from helper import page_config, init_state_bucket_thickness, input_number, input_radio, reset_confirmation, create_report_bucket_thickness
 page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -78,7 +78,7 @@ if st.session_state.form_submitted:
             
     final_dict = dict(zip(bucket_target, list(temp_dict.values())))
         
-    save_flags = [key for key, value in final_dict.items() if value == "👍 Good"]
+    safe_flags = [key for key, value in final_dict.items() if value == "👍 Good"]
     warning_flags = [key for key, value in final_dict.items() if value == "⚠️ Warning"]
     bad_flags = [key for key, value in final_dict.items() if value == "❌ Bad"]
     
@@ -143,8 +143,12 @@ if st.session_state.form_submitted:
         reset_confirmation()
 
     if st.button("📄 Download Laporan PDF!"):
-        st.text("Belum dibuat. Sabar!")
-        st.write(save_flags)
-        st.write(warning_flags)
-        st.write(st.session_state)
+        pdf_buffer = create_report_bucket_thickness(zip(bucket_target, required_fields), 
+                                                    safe_flags, warning_flags, bad_flags, 
+                                                    st.session_state.warning_images,
+                                                    st.session_state.bad_images,
+                                                    st.session_state.warning_notes,
+                                                    st.session_state.bad_notes)
+        st.download_button("Download PDF", pdf_buffer, file_name="Report_date.pdf", mime="application/pdf", icon=":material/download:")
+        
         

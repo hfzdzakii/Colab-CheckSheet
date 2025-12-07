@@ -3,7 +3,7 @@ import time
 import tempfile
 from dataclasses import dataclass, field
 from reportlab.platypus import SimpleDocTemplate, Image as RLImage, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.pagesizes import A4
 from io import BytesIO
 
@@ -50,15 +50,89 @@ def reset_confirmation():
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
-        
-def create_report_bucket_thickness(s_flags, w_flags, b_flags, w_imgs, b_imgs, w_notes, b_notes):
+
+def get_img_size():
+    return ""
+                                    # targets : zip(bucket_target, required_fields)
+def create_report_bucket_thickness(targets_and_data, s_flags, w_flags, b_flags, w_imgs, b_imgs, w_notes, b_notes): # flag : list | notes : dict
+    buffer = BytesIO()
+    styles = getSampleStyleSheet()
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    
+    hanging_style = ParagraphStyle(
+        name="HangingNumber",
+        parent=styles["Normal"],
+        leftIndent=30,
+        firstLineIndent=-20
+    )
+    
+    elements = []
+    
+    elements.append(Paragraph("Laporan Ketebalan Bucket", styles["Title"]))
+    elements.append(Spacer(1, 20))
+    
+    MAX_WIDTH = 300
+    
     if len(w_flags) == 0 and len(b_flags) == 0:
-        pass # Show semua Safe Flags
+        # Safe Section
+        elements.append(Paragraph("List part yang aman :", styles["Normal"]))
+        elements.append(Spacer(1, 10))
+        for idx, safe in enumerate(s_flags):
+            elements.append(Paragraph(f"{idx+1}. {safe}", hanging_style))
+            elements.append(Spacer(1, 5))
+            elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[safe]}", hanging_style))
+            elements.append(Spacer(1, 8))
     else:
-        buffer = BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=A4)
-        styles = getSampleStyleSheet()
-        elements = []
+        # Safe Section
+        elements.append(Paragraph("List part yang aman :", styles["Normal"]))
+        elements.append(Spacer(1, 10))
+        for idx, safe in enumerate(s_flags):
+            elements.append(Paragraph(f"{idx+1}. {safe}", hanging_style))
+            elements.append(Spacer(1, 5))
+            elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[safe]}", hanging_style))
+            elements.append(Spacer(1, 8))
+            
+        elements.append(Spacer(1, 12))
         
-        elements.append(Paragraph("Laporan Ketebalan Bucket", styles["Title"]))
-        elements.append(Spacer(1, 20))
+        # Warning Section
+        elements.append(Paragraph("List part yang Warning :", styles["Normal"]))
+        elements.append(Spacer(1, 10))
+        for idx, warning in enumerate(w_flags):
+            elements.append(Paragraph(f"{idx+1}. {warning}", hanging_style))
+            elements.append(Spacer(1, 5))
+            tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
+            w_imgs[warning].save(tmp.name)
+            orig_w, orig_h = w_imgs[warning].size
+            scale = MAX_WIDTH / orig_w
+            pdf_h = orig_h * scale
+            elements.append(RLImage(tmp.name, width=MAX_WIDTH, height=pdf_h))
+            elements.append(Spacer(1, 5))
+            elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[warning]}", hanging_style))
+            elements.append(Spacer(1, 5))
+            elements.append(Paragraph(f"Catatan : {w_notes[safe]}", hanging_style))
+            elements.append(Spacer(1, 8))
+            
+        elements.append(Spacer(1, 12))
+        
+        # Bad Section
+        elements.append(Paragraph("List part yang Bad / Tidak Teridentifikasi / Tidak Ada :", styles["Normal"]))
+        elements.append(Spacer(1, 10))
+        for idx, bad in enumerate(b_flags):
+            elements.append(Paragraph(f"{idx+1}. {bad}", hanging_style))
+            elements.append(Spacer(1, 5))
+            tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
+            b_imgs[bad].save(tmp.name)
+            orig_w, orig_h = b_imgs[bad].size
+            scale = MAX_WIDTH / orig_w
+            pdf_h = orig_h * scale
+            elements.append(RLImage(tmp.name, width=MAX_WIDTH, height=pdf_h))
+            elements.append(Spacer(1, 5))
+            elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[bad]}", hanging_style))
+            elements.append(Spacer(1, 5))
+            elements.append(Paragraph(f"Catatan : {b_notes[safe]}", hanging_style))
+            elements.append(Spacer(1, 8))
+            
+    doc.build(elements)
+    
+    buffer.seek(0)
+    return buffer
