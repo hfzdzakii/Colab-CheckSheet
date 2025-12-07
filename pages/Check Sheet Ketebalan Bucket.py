@@ -29,29 +29,82 @@ with st.sidebar:
 st.title("Ketebalan Bucket")
 
 with st.form("form_ketebalan_bucket"):
-    st.header("GET")
+    st.header("G.E.T")
+    st.subheader("G E T")
     get1, get2, get3 = st.columns(3)
     with get1:
-        bucket_tooth = input_radio("1. Bucket Tooth")
-        lock_bucket_tooth = input_radio("2. Lock, Bucket Tooth")
-        adapter = input_radio("3. Adapter")
-        choky_bar_top = input_number("4. Choky Bar Top / Adapter Top Wear Plate", max=10.0)
+        bucket_tooth = input_radio("1\\. Bucket Toothss")
+        lock_bucket_tooth = input_radio("2\\. Lock, Bucket Tooth")
+        adapter = input_radio("3\\. Adapter")
+        choky_bar_top = input_number("4\\. Choky Bar Top / Adapter Top Wear Plate", max=bucket_data["GET"]["choky_bar_top"]["std"])
     with get2:
-        choky_bar_side = input_number("5. Choky Bar Side / Adapter Side Wear Plate", max=10.0)
-        lip_shroud = input_radio("6. Lip Shroud / Toplok")
-        base_plate = input_number("7. Base Plate / Cutting Edge", max=90.0)
-        cutting_edge_top = input_number("8. Cutting Edge Top Wear Plate", max=12.0)
+        choky_bar_side = input_number("5\\. Choky Bar Side / Adapter Side Wear Plate", max=bucket_data["GET"]["choky_bar_side"]["std"])
+        lip_shroud = input_radio("6\\. Lip Shroud / Toplok")
+        base_plate = input_number("7\\. Base Plate / Cutting Edge", max=bucket_data["GET"]["base_plate"]["std"])
+        cutting_edge_top = input_number("8\\. Cutting Edge Top Wear Plate", max=bucket_data["GET"]["cutting_edge_top"]["std"])
     with get3:
-        cutting_edge_bottom = input_number("9. Cutting Edge Bottom Wear Plate", max=16.0)
-        wing_shroud = input_radio("10. Wing Shroud")
-        heels_shroud = input_radio("11. Heels Shroud")
+        cutting_edge_bottom = input_number("9\\. Cutting Edge Bottom Wear Plate", max=bucket_data["GET"]["cutting_edge_bottom"]["std"])
+        wing_shroud = input_radio("10\\. Wing Shroud")
+        heels_shroud = input_radio("11\\. Heels Shroud")
 
+    st.space("small")
+    
+    st.header("BODY")
+    st.subheader("BODY SKIN")
+    body1, body2 = st.columns(2)
+    with body1:
+        bucket_skin_inner = input_number("12\\. Bucket Skin Inner Wear Plate", max=bucket_data["BODY_SKIN"]["bucket_skin_inner"]["std"])
+        body_skin_bucket_skin = input_number("13\\. Body Skin / Bucket Skin", max=bucket_data["BODY_SKIN"]["body_skin_bucket_skin"]["std"])
+        bucket_skin_outer_1 = input_number("14\\. Bucket Skin Outer Wear Plate 1", max=bucket_data["BODY_SKIN"]["bucket_skin_outer_1"]["std"])
+    with body2:
+        bucket_skin_outer_2 = input_number("15\\. Bucket Skin Outer Wear Plate 2", max=bucket_data["BODY_SKIN"]["bucket_skin_outer_2"]["std"])
+        outer_frame_1 = input_number("16\\. Outer Frame Wear Plate 1", max=bucket_data["BODY_SKIN"]["outer_frame_1"]["std"])
+        outer_frame_2 = input_number("17\\. Outer Frame Wear Plate 2", max=bucket_data["BODY_SKIN"]["outer_frame_2"]["std"])
+    # ---
+    st.subheader("RIGHT SECTION (RH)")
+    rh1, rh2 = st.columns(2)
+    with rh1:
+        side_wall_rh = input_number("18\\. RH - Side Wall", max=bucket_data["RH"]["side_wall_rh"]["std"])
+        side_wall_inner_rh = input_number("19\\. RH - Side Wall Inner Wear Plate", max=bucket_data["RH"]["side_wall_inner_rh"]["std"])
+        side_wall_outer_1_rh = input_number("20\\. RH - Side Wall Outer Wear Plate 1", max=bucket_data["RH"]["side_wall_outer_1_rh"]["std"])
+    with rh2:
+        side_wall_outer_2_rh = input_number("21\\. RH - Side Wall Outer Wear Plate 2", max=bucket_data["RH"]["side_wall_outer_2_rh"]["std"])
+        side_cutter_rh = input_number("22\\. RH - Side Cutter", max=bucket_data["RH"]["side_cutter_rh"]["std"])
+    # ---
+    st.subheader("LEFT SECTION (LH)")
+    lh1, lh2 = st.columns(2)
+    with lh1:
+        side_wall_lh = input_number("23\\. LH - Side Wall", max=bucket_data["LH"]["side_wall_lh"]["std"])
+        side_wall_inner_lh = input_number("24\\. LH - Side Wall Inner Wear Plate", max=bucket_data["LH"]["side_wall_inner_lh"]["std"])
+        side_wall_outer_1_lh = input_number("25\\. LH - Side Wall Outer Wear Plate 1", max=bucket_data["LH"]["side_wall_outer_1_lh"]["std"])
+    with lh2:
+        side_wall_outer_2_lh = input_number("26\\. LH - Side Wall Outer Wear Plate 2", max=bucket_data["LH"]["side_wall_outer_2_lh"]["std"])
+        side_cutter_lh = input_number("27\\. LH - Side Cutter", max=bucket_data["LH"]["side_cutter_lh"]["std"])
+
+    st.space("small")
+    
+    st.header("BRACKET")
+    st.subheader("BRACKET STRUCTURE")
+    plate_bracket = input_radio("28\\. Plate, Bracket Mounting")
+    top_box = input_radio("29\\. Top Box")
+    
     submitted = st.form_submit_button("Save")
 
 required_fields = [
     bucket_tooth, lock_bucket_tooth, adapter, choky_bar_top,
     choky_bar_side, lip_shroud, base_plate, cutting_edge_top,
-    cutting_edge_bottom, wing_shroud, heels_shroud
+    cutting_edge_bottom, wing_shroud, heels_shroud,
+    
+    bucket_skin_inner,body_skin_bucket_skin, bucket_skin_outer_1,
+    bucket_skin_outer_2, outer_frame_1, outer_frame_2,
+    
+    side_wall_rh, side_wall_inner_rh, side_wall_outer_1_rh,
+    side_wall_outer_2_rh, side_cutter_rh,
+    
+    side_wall_lh, side_wall_inner_lh, side_wall_outer_1_lh,
+    side_wall_outer_2_lh, side_cutter_lh,
+    
+    plate_bracket, top_box
 ]
 
 if submitted:    
@@ -67,7 +120,9 @@ if submitted:
     
 if st.session_state.form_submitted:
     temp_dict = dict(zip(bucket_target_snake, required_fields))
-    check_fields_values = list(bucket_data["GET"].keys()) # int / float
+    
+    check_fields_values = [*bucket_data["GET"].keys(), *bucket_data["BODY_SKIN"].keys(),
+                            *bucket_data["RH"].keys(), *bucket_data["LH"].keys()] # float
         
     for field_name in check_fields_values:
         if temp_dict[field_name] > bucket_data["GET"][field_name]["min"] + 3:
@@ -82,6 +137,7 @@ if st.session_state.form_submitted:
     safe_flags = [key for key, value in final_dict.items() if value == "👍 Good"]
     warning_flags = [key for key, value in final_dict.items() if value == "⚠️ Warning"]
     bad_flags = [key for key, value in final_dict.items() if value == "❌ Bad"]
+    missing_images = []
     
     if not warning_flags and not bad_flags:
         st.success("👍 Semua Aman!")
@@ -144,6 +200,7 @@ if st.session_state.form_submitted:
         reset_confirmation()
 
     if st.button("📄 Download Laporan PDF!"):
+        
         pdf_buffer = create_report_bucket_thickness(dict(zip(bucket_target, required_fields)), 
                                                     safe_flags, warning_flags, bad_flags, 
                                                     st.session_state.warning_images,
