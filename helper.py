@@ -36,12 +36,11 @@ def input_radio(message, options=["👍 Good", "❌ Bad"]):
 def input_number(message, max):
     return st.number_input(message, max_value=max, min_value=0.0, format="%.2f", help="Gunakan titik (.) sebagai pengganti koma.")
 
-@st.dialog("Konfirmasi Reset?")
+@st.dialog("Yakin melakukan Reset?")
 def reset_confirmation():
-    st.subheader("Yakin melakukan Reset?")
     st.write("Melakukan reset akan menghilangkan semua data.")
-    with st.spinner("Tunggu 5 detik...", show_time=True):
-        time.sleep(5)
+    with st.spinner("Tunggu 3 detik...", show_time=True):
+        time.sleep(3)
     if st.button("Reset!", type="primary", icon=":material/delete:", width="stretch"):
         for key in st.session_state.keys():
             del st.session_state[key]

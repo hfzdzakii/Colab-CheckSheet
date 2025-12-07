@@ -72,7 +72,7 @@ required_fields = [
 ]
 
 if submitted:    
-    if any((field == "0.0" or field == None) for field in required_fields):
+    if any((field == "0.00" or field == None) for field in required_fields):
         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
     else:
         st.session_state.form_submitted = True
