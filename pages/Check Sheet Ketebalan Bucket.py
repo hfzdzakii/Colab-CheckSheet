@@ -103,7 +103,7 @@ if st.session_state.form_submitted:
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
                 if photo is not None:
-                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"warning_upload_{idx}"):
+                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"warning_upload_{idx}", type="primary"):
                         image = Image.open(photo)
                         st.session_state.warning_images[name] = image
                         img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")

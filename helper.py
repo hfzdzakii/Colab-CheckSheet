@@ -109,7 +109,7 @@ def create_report_bucket_thickness(targets_and_data, s_flags, w_flags, b_flags, 
             elements.append(Spacer(1, 5))
             elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[warning]}", hanging_style))
             elements.append(Spacer(1, 5))
-            elements.append(Paragraph(f"Catatan : {w_notes[safe]}", hanging_style))
+            elements.append(Paragraph(f"Catatan : {w_notes[warning]}", hanging_style))
             elements.append(Spacer(1, 8))
             
         elements.append(Spacer(1, 12))
@@ -129,7 +129,7 @@ def create_report_bucket_thickness(targets_and_data, s_flags, w_flags, b_flags, 
             elements.append(Spacer(1, 5))
             elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[bad]}", hanging_style))
             elements.append(Spacer(1, 5))
-            elements.append(Paragraph(f"Catatan : {b_notes[safe]}", hanging_style))
+            elements.append(Paragraph(f"Catatan : {b_notes[bad]}", hanging_style))
             elements.append(Spacer(1, 8))
             
     doc.build(elements)
