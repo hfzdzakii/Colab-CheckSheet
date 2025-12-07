@@ -1,5 +1,6 @@
 import streamlit as st
 import sys, os
+from datetime import datetime
 from pathlib import Path
 from PIL import Image
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -130,7 +131,7 @@ if st.session_state.form_submitted:
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
                 if photo is not None:
-                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"bad_upload_{idx}"):
+                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"bad_upload_{idx}", type="primary"):
                         image = Image.open(photo)
                         st.session_state.bad_images[name] = image
                         img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
@@ -149,6 +150,8 @@ if st.session_state.form_submitted:
                                                     st.session_state.bad_images,
                                                     st.session_state.warning_notes,
                                                     st.session_state.bad_notes)
-        st.download_button("Download PDF", pdf_buffer, file_name="Report_date.pdf", mime="application/pdf", icon=":material/download:")
+        now = datetime.now()
+        timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+        st.download_button("Download PDF", pdf_buffer, file_name=f"Report_Ketebalan_Bucket_{timestamp}.pdf", mime="application/pdf", icon=":material/download:")
         
         

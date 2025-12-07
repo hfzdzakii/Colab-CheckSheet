@@ -2,7 +2,7 @@ import streamlit as st
 import time
 import tempfile
 from dataclasses import dataclass, field
-from reportlab.platypus import SimpleDocTemplate, Image as RLImage, Paragraph, Spacer
+from reportlab.platypus import SimpleDocTemplate, Image as RLImage, Paragraph, Spacer, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.pagesizes import A4
 from io import BytesIO
@@ -44,15 +44,12 @@ def input_number(message, max):
 @st.dialog("Yakin melakukan Reset?")
 def reset_confirmation():
     st.write("Melakukan reset akan menghilangkan semua data.")
-    with st.spinner("Tunggu 3 detik...", show_time=True):
+    with st.spinner("Tunggu..."):
         time.sleep(3)
     if st.button("Reset!", type="primary", icon=":material/delete:", width="stretch"):
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
-
-def get_img_size():
-    return ""
                                     # targets : zip(bucket_target, required_fields)
 def create_report_bucket_thickness(targets_and_data, s_flags, w_flags, b_flags, w_imgs, b_imgs, w_notes, b_notes): # flag : list | notes : dict
     buffer = BytesIO()
