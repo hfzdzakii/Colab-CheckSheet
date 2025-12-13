@@ -84,78 +84,110 @@ def create_report_bucket_thickness(identities, targets_and_data, s_flags, w_flag
     
     elements = []
     
-    hanging_style = ParagraphStyle(
-        name="HangingNumber",
-        parent=styles["Normal"],
-        leftIndent=30,
-        firstLineIndent=-20
+    title_style = styles["Title"]
+    elements.append(Paragraph("Laporan Ketebalan Bucket", title_style))
+    elements.append(Spacer(1, 12))
+    
+    ids = (identities + [""] * 9)[:9]
+    table_data = [ids[i:i+3] for i in range(0, 9, 3)]
+    
+    table_style = TableStyle([
+        ("GRID", (0,0), (-1,-1), 0.5, colors.black),
+        ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
+        ("ALIGN", (0,0), (-1,-1), "LEFT"),
+        ("FONTSIZE", (0,0), (-1,-1), 9),
+        ("LEFTPADDING", (0,0), (-1,-1), 6),
+        ("RIGHTPADDING", (0,0), (-1,-1), 6),
+        ("TOPPADDING", (0,0), (-1,-1), 6),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 6),
+    ])
+    
+    identity_table = Table(table_data, colWidths=[None, None, None])
+    identity_table.setStyle(table_style)
+    elements.append(identity_table)
+    elements.append(Spacer(1, 12))
+    MAX_IMG_HEIGHT = 5 * cm
+    
+    bold_sub = ParagraphStyle(
+        name="BoldSub",
+        parent=styles["Heading2"],
+        fontName="Helvetica-Bold",
+        fontSize=12,
+        spaceAfter=6
     )
     
-    elements.append(Paragraph("Laporan Ketebalan Bucket", styles["Title"]))
-    elements.append(Spacer(1, 20))
-    
-    MAX_WIDTH = 300
-    
-    if len(w_flags) == 0 and len(b_flags) == 0:
-        # Safe Section
-        elements.append(Paragraph("List part yang aman :", styles["Normal"]))
-        elements.append(Spacer(1, 10))
-        for idx, safe in enumerate(s_flags):
-            elements.append(Paragraph(f"{idx+1}. {safe}", hanging_style))
-            elements.append(Spacer(1, 5))
-            elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[safe]}", hanging_style))
-            elements.append(Spacer(1, 8))
-    else:
-        # Safe Section
-        elements.append(Paragraph("List part yang aman :", styles["Normal"]))
-        elements.append(Spacer(1, 10))
-        for idx, safe in enumerate(s_flags):
-            elements.append(Paragraph(f"{idx+1}. {safe}", hanging_style))
-            elements.append(Spacer(1, 5))
-            elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[safe]}", hanging_style))
-            elements.append(Spacer(1, 8))
-            
-        elements.append(Spacer(1, 12))
+    # Safe Section
+    elements.append(Paragraph("List Part Safe!", bold_sub))
+    elements.append(Spacer(1, 6))
+    for i, safe in enumerate(s_flags, start=1):
+        elements.append(Paragraph(f"{i}. {safe}", styles["Normal"]))
+        elements.append(Spacer(1, 2))
+        elements.append(Paragraph(f"Status / Ketebalan (mm): {targets_and_data[safe]}", styles["Normal"]))
+        elements.append(Spacer(1, 6))
         
+            
+    if w_flags:
         # Warning Section
-        elements.append(Paragraph("List part yang Warning :", styles["Normal"]))
-        elements.append(Spacer(1, 10))
-        for idx, warning in enumerate(w_flags):
-            elements.append(Paragraph(f"{idx+1}. {warning}", hanging_style))
-            elements.append(Spacer(1, 5))
+        elements.append(PageBreak())
+        elements.append(Paragraph("List Part Warning!", bold_sub))
+        elements.append(Spacer(1, 6))
+        for idx, warning in enumerate(w_flags, start=1):
+            elements.append(Paragraph(f"{idx}. {warning}", styles["Heading3"]))
+            elements.append(Spacer(1, 3))
             tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
             w_imgs[warning].save(tmp.name)
             orig_w, orig_h = w_imgs[warning].size
-            scale = MAX_WIDTH / orig_w
+            if orig_h == 0:
+                scale = 1.0
+            else:
+                scale = (MAX_IMG_HEIGHT) / orig_h
+            pdf_w = orig_w * scale
             pdf_h = orig_h * scale
-            elements.append(RLImage(tmp.name, width=MAX_WIDTH, height=pdf_h))
-            elements.append(Spacer(1, 5))
-            elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[warning]}", hanging_style))
-            elements.append(Spacer(1, 5))
-            elements.append(Paragraph(f"Catatan : {w_notes[warning]}", hanging_style))
-            elements.append(Spacer(1, 8))
+            img_flow = RLImage(tmp.name, width=pdf_w, height=pdf_h)
+            img_flow.hAlign = "CENTER"
+            elements.append(img_flow)
+            elements.append(Spacer(1, 3))
+            elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[warning]}", styles["Normal"]))
+            elements.append(Spacer(1, 3))
+            elements.append(Paragraph(f"Catatan :", styles["Normal"]))
+            elements.append(Spacer(1, 2))
+            elements.append(Paragraph(f"{w_notes[warning]}", styles["Normal"]))
+            elements.append(Spacer(1, 6))
             
-        elements.append(Spacer(1, 12))
-        
+            if idx % 2 == 0 and idx<len(w_flags):
+                elements.append(PageBreak())
+    
+    if b_flags:
         # Bad Section
-        elements.append(Paragraph("List part yang Bad / Tidak Teridentifikasi / Tidak Ada :", styles["Normal"]))
-        elements.append(Spacer(1, 10))
-        for idx, bad in enumerate(b_flags):
-            elements.append(Paragraph(f"{idx+1}. {bad}", hanging_style))
-            elements.append(Spacer(1, 5))
+        elements.append(PageBreak())
+        elements.append(Paragraph("List Part Bad / Tidak Teridentifikasi / Tidak Ada!", bold_sub))
+        elements.append(Spacer(1, 6))
+        for idx, bad in enumerate(b_flags, start=1):
+            elements.append(Paragraph(f"{idx}. {bad}", styles["Heading3"]))
+            elements.append(Spacer(1, 3))
             tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
             b_imgs[bad].save(tmp.name)
             orig_w, orig_h = b_imgs[bad].size
-            scale = MAX_WIDTH / orig_w
+            if orig_h == 0:
+                scale = 1.0
+            else:
+                scale = (MAX_IMG_HEIGHT) / orig_h
+            pdf_w = orig_w * scale
             pdf_h = orig_h * scale
-            elements.append(RLImage(tmp.name, width=MAX_WIDTH, height=pdf_h))
-            elements.append(Spacer(1, 5))
-            elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[bad]}", hanging_style))
-            elements.append(Spacer(1, 5))
-            elements.append(Paragraph(f"Catatan : {b_notes[bad]}", hanging_style))
-            elements.append(Spacer(1, 8))
+            img_flow = RLImage(tmp.name, width=pdf_w, height=pdf_h)
+            img_flow.hAlign = "CENTER"
+            elements.append(img_flow)
+            elements.append(Spacer(1, 3))
+            elements.append(Paragraph(f"Status / Ketebalan (mm) : {targets_and_data[bad]}", styles["Normal"]))
+            elements.append(Spacer(1, 3))
+            elements.append(Paragraph(f"Catatan :", styles["Normal"]))
+            elements.append(Spacer(1, 2))
+            elements.append(Paragraph(f"{b_notes[bad]}", styles["Normal"]))
+            elements.append(Spacer(1, 6))
+            
+            if idx % 2 == 0 and idx<len(b_flags):
+                elements.append(PageBreak())
             
     doc.build(elements)
-    
     buffer.seek(0)
     return buffer
