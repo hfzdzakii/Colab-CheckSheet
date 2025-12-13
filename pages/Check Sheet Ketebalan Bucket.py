@@ -192,7 +192,7 @@ if st.session_state.form_submitted:
                 if st.button("Ambil ulang gambar!", key=f"bad_button_edit_{idx}", icon=":material/camera:"):
                     st.session_state.open_camera_name = name
             else:
-                if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}", type="primary", icon=":material/camera:"):
+                if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
                     st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
@@ -236,11 +236,12 @@ if st.session_state.form_submitted:
             if st.session_state.get(bad_cam_key) is None:
                 missing_images.append(name)
         
-        if missing_images or missing_notes:
+        if missing_notes:
             st.error("❌ Catatan wajib diisi untuk item berikut:")
             for i, name in enumerate(missing_notes, start=1):
                 st.write(f"{i}. {name}")
-            st.space("small")
+        st.space("small")
+        if missing_images:
             st.error("❌ Dokumentasi Gambar wajib diisi untuk item berikut:")
             for i, name in enumerate(missing_images, start=1):
                 st.write(f"{i}. {name}")
