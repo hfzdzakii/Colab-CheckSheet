@@ -47,46 +47,46 @@ with st.form("form_ketebalan_bucket"):
         wing_shroud = input_radio("10\\. Wing Shroud")
         heels_shroud = input_radio("11\\. Heels Shroud")
 
-    st.space("small")
+    # st.space("small")
     
-    st.header("BODY")
-    st.subheader("BODY SKIN")
-    body1, body2 = st.columns(2)
-    with body1:
-        bucket_skin_inner = input_number("12\\. Bucket Skin Inner Wear Plate", help=bucket_data["BODY_SKIN"]["bucket_skin_inner"])
-        body_skin_bucket_skin = input_number("13\\. Body Skin / Bucket Skin", help=bucket_data["BODY_SKIN"]["body_skin_bucket_skin"])
-        bucket_skin_outer_1 = input_number("14\\. Bucket Skin Outer Wear Plate 1", help=bucket_data["BODY_SKIN"]["bucket_skin_outer_1"])
-    with body2:
-        bucket_skin_outer_2 = input_number("15\\. Bucket Skin Outer Wear Plate 2", help=bucket_data["BODY_SKIN"]["bucket_skin_outer_2"])
-        outer_frame_1 = input_number("16\\. Outer Frame Wear Plate 1", help=bucket_data["BODY_SKIN"]["outer_frame_1"])
-        outer_frame_2 = input_number("17\\. Outer Frame Wear Plate 2", help=bucket_data["BODY_SKIN"]["outer_frame_2"])
-    # ---
-    st.subheader("RIGHT SECTION (RH)")
-    rh1, rh2 = st.columns(2)
-    with rh1:
-        side_wall_rh = input_number("18\\. RH - Side Wall", help=bucket_data["RH"]["side_wall_rh"])
-        side_wall_inner_rh = input_number("19\\. RH - Side Wall Inner Wear Plate", help=bucket_data["RH"]["side_wall_inner_rh"])
-        side_wall_outer_1_rh = input_number("20\\. RH - Side Wall Outer Wear Plate 1", help=bucket_data["RH"]["side_wall_outer_1_rh"])
-    with rh2:
-        side_wall_outer_2_rh = input_number("21\\. RH - Side Wall Outer Wear Plate 2", help=bucket_data["RH"]["side_wall_outer_2_rh"])
-        side_cutter_rh = input_number("22\\. RH - Side Cutter", help=bucket_data["RH"]["side_cutter_rh"])
-    # ---
-    st.subheader("LEFT SECTION (LH)")
-    lh1, lh2 = st.columns(2)
-    with lh1:
-        side_wall_lh = input_number("23\\. LH - Side Wall", help=bucket_data["LH"]["side_wall_lh"])
-        side_wall_inner_lh = input_number("24\\. LH - Side Wall Inner Wear Plate", help=bucket_data["LH"]["side_wall_inner_lh"])
-        side_wall_outer_1_lh = input_number("25\\. LH - Side Wall Outer Wear Plate 1", help=bucket_data["LH"]["side_wall_outer_1_lh"])
-    with lh2:
-        side_wall_outer_2_lh = input_number("26\\. LH - Side Wall Outer Wear Plate 2", help=bucket_data["LH"]["side_wall_outer_2_lh"])
-        side_cutter_lh = input_number("27\\. LH - Side Cutter", help=bucket_data["LH"]["side_cutter_lh"])
+    # st.header("BODY")
+    # st.subheader("BODY SKIN")
+    # body1, body2 = st.columns(2)
+    # with body1:
+    #     bucket_skin_inner = input_number("12\\. Bucket Skin Inner Wear Plate", help=bucket_data["BODY_SKIN"]["bucket_skin_inner"])
+    #     body_skin_bucket_skin = input_number("13\\. Body Skin / Bucket Skin", help=bucket_data["BODY_SKIN"]["body_skin_bucket_skin"])
+    #     bucket_skin_outer_1 = input_number("14\\. Bucket Skin Outer Wear Plate 1", help=bucket_data["BODY_SKIN"]["bucket_skin_outer_1"])
+    # with body2:
+    #     bucket_skin_outer_2 = input_number("15\\. Bucket Skin Outer Wear Plate 2", help=bucket_data["BODY_SKIN"]["bucket_skin_outer_2"])
+    #     outer_frame_1 = input_number("16\\. Outer Frame Wear Plate 1", help=bucket_data["BODY_SKIN"]["outer_frame_1"])
+    #     outer_frame_2 = input_number("17\\. Outer Frame Wear Plate 2", help=bucket_data["BODY_SKIN"]["outer_frame_2"])
+    # # ---
+    # st.subheader("RIGHT SECTION (RH)")
+    # rh1, rh2 = st.columns(2)
+    # with rh1:
+    #     side_wall_rh = input_number("18\\. RH - Side Wall", help=bucket_data["RH"]["side_wall_rh"])
+    #     side_wall_inner_rh = input_number("19\\. RH - Side Wall Inner Wear Plate", help=bucket_data["RH"]["side_wall_inner_rh"])
+    #     side_wall_outer_1_rh = input_number("20\\. RH - Side Wall Outer Wear Plate 1", help=bucket_data["RH"]["side_wall_outer_1_rh"])
+    # with rh2:
+    #     side_wall_outer_2_rh = input_number("21\\. RH - Side Wall Outer Wear Plate 2", help=bucket_data["RH"]["side_wall_outer_2_rh"])
+    #     side_cutter_rh = input_number("22\\. RH - Side Cutter", help=bucket_data["RH"]["side_cutter_rh"])
+    # # ---
+    # st.subheader("LEFT SECTION (LH)")
+    # lh1, lh2 = st.columns(2)
+    # with lh1:
+    #     side_wall_lh = input_number("23\\. LH - Side Wall", help=bucket_data["LH"]["side_wall_lh"])
+    #     side_wall_inner_lh = input_number("24\\. LH - Side Wall Inner Wear Plate", help=bucket_data["LH"]["side_wall_inner_lh"])
+    #     side_wall_outer_1_lh = input_number("25\\. LH - Side Wall Outer Wear Plate 1", help=bucket_data["LH"]["side_wall_outer_1_lh"])
+    # with lh2:
+    #     side_wall_outer_2_lh = input_number("26\\. LH - Side Wall Outer Wear Plate 2", help=bucket_data["LH"]["side_wall_outer_2_lh"])
+    #     side_cutter_lh = input_number("27\\. LH - Side Cutter", help=bucket_data["LH"]["side_cutter_lh"])
 
-    st.space("small")
+    # st.space("small")
     
-    st.header("BRACKET")
-    st.subheader("BRACKET STRUCTURE")
-    plate_bracket = input_radio("28\\. Plate, Bracket Mounting")
-    top_box = input_radio("29\\. Top Box")
+    # st.header("BRACKET")
+    # st.subheader("BRACKET STRUCTURE")
+    # plate_bracket = input_radio("28\\. Plate, Bracket Mounting")
+    # top_box = input_radio("29\\. Top Box")
     
     submitted = st.form_submit_button("Save")
 
@@ -95,16 +95,16 @@ required_fields = [
     choky_bar_side, lip_shroud, base_plate, cutting_edge_top,
     cutting_edge_bottom, wing_shroud, heels_shroud,
     
-    bucket_skin_inner,body_skin_bucket_skin, bucket_skin_outer_1,
-    bucket_skin_outer_2, outer_frame_1, outer_frame_2,
+    # bucket_skin_inner,body_skin_bucket_skin, bucket_skin_outer_1,
+    # bucket_skin_outer_2, outer_frame_1, outer_frame_2,
     
-    side_wall_rh, side_wall_inner_rh, side_wall_outer_1_rh,
-    side_wall_outer_2_rh, side_cutter_rh,
+    # side_wall_rh, side_wall_inner_rh, side_wall_outer_1_rh,
+    # side_wall_outer_2_rh, side_cutter_rh,
     
-    side_wall_lh, side_wall_inner_lh, side_wall_outer_1_lh,
-    side_wall_outer_2_lh, side_cutter_lh,
+    # side_wall_lh, side_wall_inner_lh, side_wall_outer_1_lh,
+    # side_wall_outer_2_lh, side_cutter_lh,
     
-    plate_bracket, top_box
+    # plate_bracket, top_box
 ]
 
 if submitted:    
