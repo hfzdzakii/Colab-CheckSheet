@@ -106,7 +106,7 @@ def create_report_bucket_thickness(identities, targets_and_data, s_flags, w_flag
     identity_table.setStyle(table_style)
     elements.append(identity_table)
     elements.append(Spacer(1, 12))
-    MAX_IMG_HEIGHT = 5 * cm
+    MAX_IMG_HEIGHT = 7.5 * cm
     
     bold_sub = ParagraphStyle(
         name="BoldSub",
