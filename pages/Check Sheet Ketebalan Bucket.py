@@ -112,6 +112,7 @@ if submitted:
         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
     else:
         st.session_state.form_submitted = True
+        st.session_state.pdf_download = False
         st.session_state.open_camera_name = None
         st.session_state.warning_images = {}
         st.session_state.warning_notes = {}
@@ -160,9 +161,11 @@ if st.session_state.form_submitted:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}")
                 if st.button("Ambil ulang gambar!", key=f"warning_button_edit_{idx}", icon=":material/camera:"):
                     st.session_state.open_camera_name = name
+                    st.rerun()
             else :
                 if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
                     st.session_state.open_camera_name = name
+                    st.rerun()
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
                 if photo is not None:
@@ -191,9 +194,11 @@ if st.session_state.form_submitted:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}")
                 if st.button("Ambil ulang gambar!", key=f"bad_button_edit_{idx}", icon=":material/camera:"):
                     st.session_state.open_camera_name = name
+                    st.rerun()
             else:
                 if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
                     st.session_state.open_camera_name = name
+                    st.rerun()
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
                 if photo is not None:
