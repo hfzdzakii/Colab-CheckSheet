@@ -2,9 +2,14 @@ import streamlit as st
 import time
 import tempfile
 from dataclasses import dataclass, field
-from reportlab.platypus import SimpleDocTemplate, Image as RLImage, Paragraph, Spacer, PageBreak
+from reportlab.platypus import (
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
+    Image as RLImage, PageBreak
+)
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import cm
 from io import BytesIO
 
 def page_config():
@@ -55,11 +60,29 @@ def reset_confirmation():
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
-                                    # targets : zip(bucket_target, required_fields)
+        
+def process_identities(identities):
+    nama_processed = f"Nama: {identities[0]}"
+    nrp_processed = f"NRP: {identities[1]}"
+    jabatan_processed = f"Jabatan: {identities[2]}"
+    district_processed = f"District: {identities[3]}"
+    date_processed = f"Tanggal Insp: {identities[4]}"
+    egi_processed = f"EGI: {identities[5]}"
+    hm_unit_processed = f"HM Unit: {identities[6]}"
+    ps_processed = f"PS: {identities[7]}"
+    metode_insp_processed = f"Metode Insp: {identities[8]}"
+    return [nama_processed, nrp_processed, jabatan_processed,
+            district_processed, date_processed, egi_processed,
+            hm_unit_processed, ps_processed, metode_insp_processed]
+                                                # targets : zip(bucket_target, required_fields)
 def create_report_bucket_thickness(identities, targets_and_data, s_flags, w_flags, b_flags, w_imgs, b_imgs, w_notes, b_notes): # flag : list | notes : dict
     buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4,
+                            leftMargin=2*cm, rightMargin=2*cm,
+                            topMargin=2*cm, bottomMargin=2*cm)
     styles = getSampleStyleSheet()
-    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    
+    elements = []
     
     hanging_style = ParagraphStyle(
         name="HangingNumber",
@@ -67,8 +90,6 @@ def create_report_bucket_thickness(identities, targets_and_data, s_flags, w_flag
         leftIndent=30,
         firstLineIndent=-20
     )
-    
-    elements = []
     
     elements.append(Paragraph("Laporan Ketebalan Bucket", styles["Title"]))
     elements.append(Spacer(1, 20))

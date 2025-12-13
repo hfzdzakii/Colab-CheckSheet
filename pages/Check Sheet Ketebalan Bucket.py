@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from data_loader import load_bucket_thickness_data, load_bucket_thickness_target
-from helper import page_config, init_state_bucket_thickness, input_number, input_radio, reset_confirmation, create_report_bucket_thickness, input_text
+from helper import page_config, init_state_bucket_thickness, input_number, input_radio, reset_confirmation, create_report_bucket_thickness, input_text, process_identities
 page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -141,6 +141,8 @@ if submitted:
         st.session_state.bad_notes = {}        
     
 if st.session_state.form_submitted:
+    identities_processed = process_identities(identities)
+    
     temp_dict = dict(zip(bucket_target_snake, required_fields))
     
     check_fields_values = [*bucket_data["GET"].keys()] # *bucket_data["BODY_SKIN"].keys(),
@@ -260,18 +262,19 @@ if st.session_state.form_submitted:
             if st.session_state.bad_images.get(name) is None:
                 missing_images.append(name)
         
-        if missing_notes:
-            st.error("❌ Catatan wajib diisi untuk item berikut:")
-            for i, name in enumerate(missing_notes, start=1):
-                st.write(f"{i}. {name}")
-        if missing_images:
-            st.space("small")
-            st.error("❌ Dokumentasi Gambar wajib diisi untuk item berikut:")
-            for i, name in enumerate(missing_images, start=1):
-                st.write(f"{i}. {name}")
+        if missing_images or missing_notes:
+            if missing_notes:
+                st.error("❌ Catatan wajib diisi untuk item berikut:")
+                for i, name in enumerate(missing_notes, start=1):
+                    st.write(f"{i}. {name}")
+            if missing_images:
+                st.space("small")
+                st.error("❌ Dokumentasi Gambar wajib diisi untuk item berikut:")
+                for i, name in enumerate(missing_images, start=1):
+                    st.write(f"{i}. {name}")
             st.stop()
         else:
-            pdf_buffer = create_report_bucket_thickness(identities,
+            pdf_buffer = create_report_bucket_thickness(identities_processed,
                                                         dict(zip(bucket_target, required_fields)), 
                                                         safe_flags, warning_flags, bad_flags, 
                                                         st.session_state.warning_images,
