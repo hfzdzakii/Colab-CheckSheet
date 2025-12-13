@@ -38,8 +38,8 @@ def init_state_bucket_thickness() -> AppStateBucketThickness:
 def input_radio(message, options=["👍 Good", "❌ Bad"]):
     return st.radio(message, options, horizontal=True, index=None)
 
-def input_number(message, max):
-    return st.number_input(message, max_value=max, min_value=0.0, format="%.2f", help="Gunakan titik (.) sebagai pengganti koma.")
+def input_number(message, help):
+    return st.number_input(message, max_value=help["std"], min_value=0.0, format="%.2f", placeholder="Gunakan titik (.) sebagai pengganti koma (,)", help=f"std:{help["std"]} | min:{help["min"]}")
 
 @st.dialog("Yakin melakukan Reset?")
 def reset_confirmation():

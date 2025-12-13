@@ -36,14 +36,14 @@ with st.form("form_ketebalan_bucket"):
         bucket_tooth = input_radio("1\\. Bucket Toothss")
         lock_bucket_tooth = input_radio("2\\. Lock, Bucket Tooth")
         adapter = input_radio("3\\. Adapter")
-        choky_bar_top = input_number("4\\. Choky Bar Top / Adapter Top Wear Plate", max=bucket_data["GET"]["choky_bar_top"]["std"])
+        choky_bar_top = input_number("4\\. Choky Bar Top / Adapter Top Wear Plate", help=bucket_data["GET"]["choky_bar_top"])
     with get2:
-        choky_bar_side = input_number("5\\. Choky Bar Side / Adapter Side Wear Plate", max=bucket_data["GET"]["choky_bar_side"]["std"])
+        choky_bar_side = input_number("5\\. Choky Bar Side / Adapter Side Wear Plate", help=bucket_data["GET"]["choky_bar_side"])
         lip_shroud = input_radio("6\\. Lip Shroud / Toplok")
-        base_plate = input_number("7\\. Base Plate / Cutting Edge", max=bucket_data["GET"]["base_plate"]["std"])
-        cutting_edge_top = input_number("8\\. Cutting Edge Top Wear Plate", max=bucket_data["GET"]["cutting_edge_top"]["std"])
+        base_plate = input_number("7\\. Base Plate / Cutting Edge", help=bucket_data["GET"]["base_plate"])
+        cutting_edge_top = input_number("8\\. Cutting Edge Top Wear Plate", help=bucket_data["GET"]["cutting_edge_top"])
     with get3:
-        cutting_edge_bottom = input_number("9\\. Cutting Edge Bottom Wear Plate", max=bucket_data["GET"]["cutting_edge_bottom"]["std"])
+        cutting_edge_bottom = input_number("9\\. Cutting Edge Bottom Wear Plate", help=bucket_data["GET"]["cutting_edge_bottom"])
         wing_shroud = input_radio("10\\. Wing Shroud")
         heels_shroud = input_radio("11\\. Heels Shroud")
 
@@ -53,33 +53,33 @@ with st.form("form_ketebalan_bucket"):
     st.subheader("BODY SKIN")
     body1, body2 = st.columns(2)
     with body1:
-        bucket_skin_inner = input_number("12\\. Bucket Skin Inner Wear Plate", max=bucket_data["BODY_SKIN"]["bucket_skin_inner"]["std"])
-        body_skin_bucket_skin = input_number("13\\. Body Skin / Bucket Skin", max=bucket_data["BODY_SKIN"]["body_skin_bucket_skin"]["std"])
-        bucket_skin_outer_1 = input_number("14\\. Bucket Skin Outer Wear Plate 1", max=bucket_data["BODY_SKIN"]["bucket_skin_outer_1"]["std"])
+        bucket_skin_inner = input_number("12\\. Bucket Skin Inner Wear Plate", help=bucket_data["BODY_SKIN"]["bucket_skin_inner"])
+        body_skin_bucket_skin = input_number("13\\. Body Skin / Bucket Skin", help=bucket_data["BODY_SKIN"]["body_skin_bucket_skin"])
+        bucket_skin_outer_1 = input_number("14\\. Bucket Skin Outer Wear Plate 1", help=bucket_data["BODY_SKIN"]["bucket_skin_outer_1"])
     with body2:
-        bucket_skin_outer_2 = input_number("15\\. Bucket Skin Outer Wear Plate 2", max=bucket_data["BODY_SKIN"]["bucket_skin_outer_2"]["std"])
-        outer_frame_1 = input_number("16\\. Outer Frame Wear Plate 1", max=bucket_data["BODY_SKIN"]["outer_frame_1"]["std"])
-        outer_frame_2 = input_number("17\\. Outer Frame Wear Plate 2", max=bucket_data["BODY_SKIN"]["outer_frame_2"]["std"])
+        bucket_skin_outer_2 = input_number("15\\. Bucket Skin Outer Wear Plate 2", help=bucket_data["BODY_SKIN"]["bucket_skin_outer_2"])
+        outer_frame_1 = input_number("16\\. Outer Frame Wear Plate 1", help=bucket_data["BODY_SKIN"]["outer_frame_1"])
+        outer_frame_2 = input_number("17\\. Outer Frame Wear Plate 2", help=bucket_data["BODY_SKIN"]["outer_frame_2"])
     # ---
     st.subheader("RIGHT SECTION (RH)")
     rh1, rh2 = st.columns(2)
     with rh1:
-        side_wall_rh = input_number("18\\. RH - Side Wall", max=bucket_data["RH"]["side_wall_rh"]["std"])
-        side_wall_inner_rh = input_number("19\\. RH - Side Wall Inner Wear Plate", max=bucket_data["RH"]["side_wall_inner_rh"]["std"])
-        side_wall_outer_1_rh = input_number("20\\. RH - Side Wall Outer Wear Plate 1", max=bucket_data["RH"]["side_wall_outer_1_rh"]["std"])
+        side_wall_rh = input_number("18\\. RH - Side Wall", help=bucket_data["RH"]["side_wall_rh"])
+        side_wall_inner_rh = input_number("19\\. RH - Side Wall Inner Wear Plate", help=bucket_data["RH"]["side_wall_inner_rh"])
+        side_wall_outer_1_rh = input_number("20\\. RH - Side Wall Outer Wear Plate 1", help=bucket_data["RH"]["side_wall_outer_1_rh"])
     with rh2:
-        side_wall_outer_2_rh = input_number("21\\. RH - Side Wall Outer Wear Plate 2", max=bucket_data["RH"]["side_wall_outer_2_rh"]["std"])
-        side_cutter_rh = input_number("22\\. RH - Side Cutter", max=bucket_data["RH"]["side_cutter_rh"]["std"])
+        side_wall_outer_2_rh = input_number("21\\. RH - Side Wall Outer Wear Plate 2", help=bucket_data["RH"]["side_wall_outer_2_rh"])
+        side_cutter_rh = input_number("22\\. RH - Side Cutter", help=bucket_data["RH"]["side_cutter_rh"])
     # ---
     st.subheader("LEFT SECTION (LH)")
     lh1, lh2 = st.columns(2)
     with lh1:
-        side_wall_lh = input_number("23\\. LH - Side Wall", max=bucket_data["LH"]["side_wall_lh"]["std"])
-        side_wall_inner_lh = input_number("24\\. LH - Side Wall Inner Wear Plate", max=bucket_data["LH"]["side_wall_inner_lh"]["std"])
-        side_wall_outer_1_lh = input_number("25\\. LH - Side Wall Outer Wear Plate 1", max=bucket_data["LH"]["side_wall_outer_1_lh"]["std"])
+        side_wall_lh = input_number("23\\. LH - Side Wall", help=bucket_data["LH"]["side_wall_lh"])
+        side_wall_inner_lh = input_number("24\\. LH - Side Wall Inner Wear Plate", help=bucket_data["LH"]["side_wall_inner_lh"])
+        side_wall_outer_1_lh = input_number("25\\. LH - Side Wall Outer Wear Plate 1", help=bucket_data["LH"]["side_wall_outer_1_lh"])
     with lh2:
-        side_wall_outer_2_lh = input_number("26\\. LH - Side Wall Outer Wear Plate 2", max=bucket_data["LH"]["side_wall_outer_2_lh"]["std"])
-        side_cutter_lh = input_number("27\\. LH - Side Cutter", max=bucket_data["LH"]["side_cutter_lh"]["std"])
+        side_wall_outer_2_lh = input_number("26\\. LH - Side Wall Outer Wear Plate 2", help=bucket_data["LH"]["side_wall_outer_2_lh"])
+        side_cutter_lh = input_number("27\\. LH - Side Cutter", help=bucket_data["LH"]["side_cutter_lh"])
 
     st.space("small")
     
@@ -146,7 +146,7 @@ if st.session_state.form_submitted:
         st.header("⚠️ Warning")
         for idx, name in enumerate(warning_flags):
             st.warning(f"{idx+1}. {name}")
-            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"warning_note_{idx}", value="-")
+            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"warning_note_{idx}")
             st.session_state.warning_notes[name] = txt
             img_slot = st.empty()
             saved_img = st.session_state.warning_images.get(name)
@@ -161,19 +161,23 @@ if st.session_state.form_submitted:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
                 if photo is not None:
                     if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"warning_upload_{idx}", type="primary"):
-                        image = Image.open(photo)
-                        st.session_state.warning_images[name] = image
-                        img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
-                        photo = None
-                        st.session_state.open_camera_name = None
-                        st.rerun()
+                        try:
+                            image = Image.open(photo)
+                            st.session_state.warning_images[name] = image
+                            img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
+                            photo = None
+                            st.session_state.open_camera_name = None
+                            st.rerun()
+                            st.toast("✔️ Foto berhasil diupload!")
+                        except Exception as e:
+                            st.toast(f"❌ Error : {e}")
         st.divider()
         
     if bad_flags:
         st.header("❌ Bad Condition / Tidak Teridentifikasi / Tidak Ada")
         for idx, name in enumerate(bad_flags):
             st.error(f"{idx+1}. {name}")
-            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"bad_note_{idx}", value="-")
+            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"bad_note_{idx}")
             st.session_state.bad_notes[name] = txt
             img_slot = st.empty()
             saved_img = st.session_state.bad_images.get(name)
@@ -188,27 +192,58 @@ if st.session_state.form_submitted:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
                 if photo is not None:
                     if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"bad_upload_{idx}", type="primary"):
-                        image = Image.open(photo)
-                        st.session_state.bad_images[name] = image
-                        img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
-                        photo = None
-                        st.session_state.open_camera_name = None
-                        st.rerun()
+                        try:
+                            image = Image.open(photo)
+                            st.session_state.bad_images[name] = image
+                            img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
+                            photo = None
+                            st.session_state.open_camera_name = None
+                            st.rerun()
+                            st.toast("✔️ Foto berhasil diupload!")
+                        except Exception as e:
+                            st.toast(f"❌ Error : {e}")
         st.divider()
     
     if st.button("Reset"):
         reset_confirmation()
 
     if st.button("📄 Download Laporan PDF!"):
+        missing_notes = []
+        missing_images = []
         
-        pdf_buffer = create_report_bucket_thickness(dict(zip(bucket_target, required_fields)), 
-                                                    safe_flags, warning_flags, bad_flags, 
-                                                    st.session_state.warning_images,
-                                                    st.session_state.bad_images,
-                                                    st.session_state.warning_notes,
-                                                    st.session_state.bad_notes)
-        now = datetime.now()
-        timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-        st.download_button("Download PDF", pdf_buffer, file_name=f"Report_Ketebalan_Bucket_{timestamp}.pdf", mime="application/pdf", icon=":material/download:")
+        for idx, name in enumerate(warning_flags):
+            warning_note_key = f"warning_note_{idx}"
+            warning_cam_key = f"warning_cam_{idx}"
+            if st.session_state.get(warning_note_key) == "":
+                missing_notes.append(name)
+            if st.session_state.get(warning_cam_key) is None:
+                missing_images.append(name)
+
+        for idx, name in enumerate(bad_flags):
+            bad_note_key = f"bad_note_{idx}"
+            bad_cam_key = f"bad_cam_{idx}"
+            if st.session_state.get(bad_note_key) == "":
+                missing_notes.append(name)
+            if st.session_state.get(bad_cam_key) is None:
+                missing_images.append(name)
+        
+        if missing_images or missing_notes:
+            st.error("❌ Dokumentasi wajib diisi untuk item berikut:")
+            for i, name in enumerate(missing_notes, start=1):
+                st.write(f"{i}. {name}")
+            st.space("small")
+            for i, name in enumerate(missing_images, start=1):
+                st.write(f"{i}. {name}")
+            st.stop()
+        else:
+            pdf_buffer = create_report_bucket_thickness(dict(zip(bucket_target, required_fields)), 
+                                                        safe_flags, warning_flags, bad_flags, 
+                                                        st.session_state.warning_images,
+                                                        st.session_state.bad_images,
+                                                        st.session_state.warning_notes,
+                                                        st.session_state.bad_notes)
+            now = datetime.now()
+            timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+            st.download_button("Download PDF", pdf_buffer, file_name=f"Report_Ketebalan_Bucket_{timestamp}.pdf", mime="application/pdf", icon=":material/download:")
         
         
