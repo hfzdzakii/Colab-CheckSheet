@@ -204,8 +204,8 @@ if st.session_state.form_submitted:
                             img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}")
                             photo = None
                             st.session_state.open_camera_name = None
-                            st.rerun()
                             st.toast("✔️ Foto berhasil diupload!")
+                            st.rerun()
                         except Exception as e:
                             st.toast(f"❌ Error : {e}")
         st.divider()
@@ -214,6 +214,7 @@ if st.session_state.form_submitted:
         reset_confirmation()
 
     if st.button("📄 Download Laporan PDF!"):
+        st.rerun()
         missing_notes = []
         missing_images = []
         
@@ -234,10 +235,11 @@ if st.session_state.form_submitted:
                 missing_images.append(name)
         
         if missing_images or missing_notes:
-            st.error("❌ Dokumentasi wajib diisi untuk item berikut:")
+            st.error("❌ Catatan wajib diisi untuk item berikut:")
             for i, name in enumerate(missing_notes, start=1):
                 st.write(f"{i}. {name}")
             st.space("small")
+            st.error("❌ Dokumentasi Gambar wajib diisi untuk item berikut:")
             for i, name in enumerate(missing_images, start=1):
                 st.write(f"{i}. {name}")
             st.stop()
