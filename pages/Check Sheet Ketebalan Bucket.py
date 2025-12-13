@@ -121,8 +121,8 @@ if submitted:
 if st.session_state.form_submitted:
     temp_dict = dict(zip(bucket_target_snake, required_fields))
     
-    check_fields_values = [*bucket_data["GET"].keys(), *bucket_data["BODY_SKIN"].keys(),
-                            *bucket_data["RH"].keys(), *bucket_data["LH"].keys()] # float
+    check_fields_values = [*bucket_data["GET"].keys()] # *bucket_data["BODY_SKIN"].keys(),
+                            # *bucket_data["RH"].keys(), *bucket_data["LH"].keys()
     sources = ["GET", "BODY_SKIN", "RH", "LH"]
     
     for field_name in check_fields_values:
