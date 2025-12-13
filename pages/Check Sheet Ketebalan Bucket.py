@@ -159,7 +159,7 @@ if st.session_state.form_submitted:
             saved_img = st.session_state.warning_images.get(name)
             if saved_img is not None:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}")
-                if st.button("Ambil ulang gambar!", key=f"warning_button_edit_{idx}", icon=":material/camera:"):
+                if st.button("Ambil ulang gambar!", key=f"warning_button_edit_{idx}", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
                     st.session_state.open_camera_name = name
                     st.rerun()
             else :
@@ -192,7 +192,7 @@ if st.session_state.form_submitted:
             saved_img = st.session_state.bad_images.get(name)
             if saved_img is not None:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}")
-                if st.button("Ambil ulang gambar!", key=f"bad_button_edit_{idx}", icon=":material/camera:"):
+                if st.button("Ambil ulang gambar!", key=f"bad_button_edit_{idx}", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
                     st.session_state.open_camera_name = name
                     st.rerun()
             else:
@@ -218,7 +218,7 @@ if st.session_state.form_submitted:
     if st.button("Reset"):
         reset_confirmation()
 
-    if st.button("📄 Download Laporan PDF!"):
+    if st.button("📄 Download Laporan PDF!", disabled=False if st.session_state.open_camera_name==None else True):
         st.session_state.pdf_download = True
         
     if st.session_state.pdf_download:
@@ -260,6 +260,6 @@ if st.session_state.form_submitted:
                                                         st.session_state.bad_notes)
             now = datetime.now()
             timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-            st.download_button("Download PDF", pdf_buffer, file_name=f"Report_Ketebalan_Bucket_{timestamp}.pdf", mime="application/pdf", icon=":material/download:")
+            st.download_button("Download PDF", pdf_buffer, file_name=f"Report_Ketebalan_Bucket_{timestamp}.pdf", mime="application/pdf", icon=":material/download:", disabled=False if st.session_state.open_camera_name==None else True)
         
         
