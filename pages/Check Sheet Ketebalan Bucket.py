@@ -161,7 +161,7 @@ if st.session_state.form_submitted:
                 if st.button("Ambil ulang gambar!", key=f"warning_button_edit_{idx}", icon=":material/camera:"):
                     st.session_state.open_camera_name = name
             else :
-                if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}", type="primary", icon=":material/camera:"):
+                if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
                     st.session_state.open_camera_name = name
             if st.session_state.open_camera_name == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
