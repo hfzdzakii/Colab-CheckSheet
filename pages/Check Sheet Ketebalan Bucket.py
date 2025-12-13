@@ -227,18 +227,16 @@ if st.session_state.form_submitted:
         
         for idx, name in enumerate(warning_flags):
             warning_note_key = f"warning_note_{idx}"
-            warning_cam_key = f"warning_cam_{idx}"
             if st.session_state.get(warning_note_key) == "":
                 missing_notes.append(name)
-            if st.session_state.get(warning_cam_key) is None:
+            if st.session_state.warning_images.get(name) is None:
                 missing_images.append(name)
 
         for idx, name in enumerate(bad_flags):
             bad_note_key = f"bad_note_{idx}"
-            bad_cam_key = f"bad_cam_{idx}"
             if st.session_state.get(bad_note_key) == "":
                 missing_notes.append(name)
-            if st.session_state.get(bad_cam_key) is None:
+            if st.session_state.bad_images.get(name) is None:
                 missing_images.append(name)
         
         if missing_notes:
