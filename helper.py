@@ -17,6 +17,7 @@ def page_config():
 @dataclass
 class AppStateBucketThickness:
     form_submitted: bool = False
+    pdf_download:bool = False
     open_camera_name: str | None = None
     warning_images:dict = field(default_factory=dict)
     warning_notes:dict = field(default_factory=dict)
@@ -28,6 +29,7 @@ def init_state_bucket_thickness() -> AppStateBucketThickness:
         st.session_state.setdefault(key, default)
     return AppStateBucketThickness(
         form_submitted=st.session_state.form_submitted,
+        pdf_download=st.session_state.pdf_download,
         open_camera_name=st.session_state.open_camera_name,
         warning_images=st.session_state.warning_images,
         warning_notes=st.session_state.warning_notes,

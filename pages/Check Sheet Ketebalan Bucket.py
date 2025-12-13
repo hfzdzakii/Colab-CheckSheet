@@ -214,7 +214,9 @@ if st.session_state.form_submitted:
         reset_confirmation()
 
     if st.button("📄 Download Laporan PDF!"):
-        st.rerun()
+        st.session_state.pdf_download = True
+        
+    if st.session_state.pdf_download:
         missing_notes = []
         missing_images = []
         
