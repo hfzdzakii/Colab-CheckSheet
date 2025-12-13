@@ -43,6 +43,9 @@ def input_radio(message, options=["👍 Good", "❌ Bad"]):
 def input_number(message, help):
     return st.number_input(message, max_value=help["std"], min_value=0.0, format="%.2f", placeholder="Gunakan titik (.) sebagai pengganti koma (,)", help=f"std:{help["std"]}, min:{help["min"]}", value=None)
 
+def input_text(message):
+    return st.text_input(message, value=None)
+
 @st.dialog("Yakin melakukan Reset?")
 def reset_confirmation():
     st.write("Melakukan reset akan menghilangkan semua data.")
@@ -53,7 +56,7 @@ def reset_confirmation():
             del st.session_state[key]
         st.rerun()
                                     # targets : zip(bucket_target, required_fields)
-def create_report_bucket_thickness(targets_and_data, s_flags, w_flags, b_flags, w_imgs, b_imgs, w_notes, b_notes): # flag : list | notes : dict
+def create_report_bucket_thickness(identities, targets_and_data, s_flags, w_flags, b_flags, w_imgs, b_imgs, w_notes, b_notes): # flag : list | notes : dict
     buffer = BytesIO()
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(buffer, pagesize=A4)

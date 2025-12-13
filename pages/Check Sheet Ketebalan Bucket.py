@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from data_loader import load_bucket_thickness_data, load_bucket_thickness_target
-from helper import page_config, init_state_bucket_thickness, input_number, input_radio, reset_confirmation, create_report_bucket_thickness
+from helper import page_config, init_state_bucket_thickness, input_number, input_radio, reset_confirmation, create_report_bucket_thickness, input_text
 page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -29,6 +29,24 @@ with st.sidebar:
 st.title("Ketebalan Bucket")
 
 with st.form("form_ketebalan_bucket"):
+    st.header("Identitas")
+    st.subheader("Lengkapi identitas Anda!")
+    id1, id2, id3 = st.columns(3)
+    with id1:
+        nama = input_text("Nama")
+        nrp = input_text("NRP")
+        jabatan = input_text("Jabatan")
+    with id2:
+        district = input_text("District")
+        date = st.date_input("Tanggal Insp", value="today", disabled=True, format="DD/MM/YYYY", help="Otomatis terisi hari ini!")
+        egi = input_text("EGI")
+    with id3:
+        hm_unit = input_text("HM Unit")
+        ps = input_text("PS")
+        metode_insp = input_text("Metode Insp")
+    
+    st.space("small")
+    
     st.header("G.E.T")
     st.subheader("G E T")
     get1, get2, get3 = st.columns(3)
@@ -90,6 +108,9 @@ with st.form("form_ketebalan_bucket"):
     
     submitted = st.form_submit_button("Save")
 
+identities = [nama, nrp, jabatan, district, date, egi, hm_unit,
+            ps, metode_insp]
+
 required_fields = [
     bucket_tooth, lock_bucket_tooth, adapter, choky_bar_top,
     choky_bar_side, lip_shroud, base_plate, cutting_edge_top,
@@ -108,7 +129,7 @@ required_fields = [
 ]
 
 if submitted:    
-    if any((field == 0.00 or field == None) for field in required_fields):
+    if any((field == 0.00 or field == None or field == "") for field in [*required_fields, *identities]):
         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
     else:
         st.session_state.form_submitted = True
@@ -153,7 +174,7 @@ if st.session_state.form_submitted:
         st.header("⚠️ Warning")
         for idx, name in enumerate(warning_flags):
             st.warning(f"{idx+1}. {name}")
-            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"warning_note_{idx}")
+            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"warning_note_{idx}", disabled=False if st.session_state.open_camera_name==None else True)
             st.session_state.warning_notes[name] = txt
             img_slot = st.empty()
             saved_img = st.session_state.warning_images.get(name)
@@ -186,7 +207,7 @@ if st.session_state.form_submitted:
         st.header("❌ Bad Condition / Tidak Teridentifikasi / Tidak Ada")
         for idx, name in enumerate(bad_flags):
             st.error(f"{idx+1}. {name}")
-            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"bad_note_{idx}")
+            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"bad_note_{idx}", disabled=False if st.session_state.open_camera_name==None else True)
             st.session_state.bad_notes[name] = txt
             img_slot = st.empty()
             saved_img = st.session_state.bad_images.get(name)
@@ -243,14 +264,15 @@ if st.session_state.form_submitted:
             st.error("❌ Catatan wajib diisi untuk item berikut:")
             for i, name in enumerate(missing_notes, start=1):
                 st.write(f"{i}. {name}")
-        st.space("small")
         if missing_images:
+            st.space("small")
             st.error("❌ Dokumentasi Gambar wajib diisi untuk item berikut:")
             for i, name in enumerate(missing_images, start=1):
                 st.write(f"{i}. {name}")
             st.stop()
         else:
-            pdf_buffer = create_report_bucket_thickness(dict(zip(bucket_target, required_fields)), 
+            pdf_buffer = create_report_bucket_thickness(identities,
+                                                        dict(zip(bucket_target, required_fields)), 
                                                         safe_flags, warning_flags, bad_flags, 
                                                         st.session_state.warning_images,
                                                         st.session_state.bad_images,
