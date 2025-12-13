@@ -123,14 +123,20 @@ if st.session_state.form_submitted:
     
     check_fields_values = [*bucket_data["GET"].keys(), *bucket_data["BODY_SKIN"].keys(),
                             *bucket_data["RH"].keys(), *bucket_data["LH"].keys()] # float
-        
+    sources = ["GET", "BODY_SKIN", "RH", "LH"]
+    
     for field_name in check_fields_values:
-        if temp_dict[field_name] > bucket_data["GET"][field_name]["min"] + 3:
-            temp_dict[field_name] = "👍 Good"
-        elif temp_dict[field_name] > bucket_data["GET"][field_name]["min"]:
-            temp_dict[field_name] = "⚠️ Warning"
-        else:
-            temp_dict[field_name] = "❌ Bad"
+        for source in sources:
+            field_data = bucket_data.get(source, {}).get(field_name, {})
+            if not field_data:
+                continue
+            min_val = field_data["min"]
+            if temp_dict[field_name] > min_val + 3:
+                temp_dict[field_name] = "👍 Good"
+            elif temp_dict[field_name] > min_val:
+                temp_dict[field_name] = "⚠️ Warning"
+            else:
+                temp_dict[field_name] = "❌ Bad"
             
     final_dict = dict(zip(bucket_target, list(temp_dict.values())))
             

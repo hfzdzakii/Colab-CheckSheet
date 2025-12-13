@@ -39,7 +39,7 @@ def input_radio(message, options=["👍 Good", "❌ Bad"]):
     return st.radio(message, options, horizontal=True, index=None)
 
 def input_number(message, help):
-    return st.number_input(message, max_value=help["std"], min_value=0.0, format="%.2f", placeholder="Gunakan titik (.) sebagai pengganti koma (,)", help=f"std:{help["std"]} | min:{help["min"]}")
+    return st.number_input(message, max_value=help["std"], min_value=0.0, format="%.2f", placeholder="Gunakan titik (.) sebagai pengganti koma (,)", help=f"std:{help["std"]}, min:{help["min"]}", value=None)
 
 @st.dialog("Yakin melakukan Reset?")
 def reset_confirmation():
