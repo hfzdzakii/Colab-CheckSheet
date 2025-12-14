@@ -39,7 +39,88 @@ def init_state_bucket_thickness() -> AppStateBucketThickness:
         warning_images=st.session_state.warning_images,
         warning_notes=st.session_state.warning_notes,
         bad_images=st.session_state.bad_images,
-        bad_notes=st.session_state.bad_notes,
+        bad_notes=st.session_state.bad_notes
+    )
+    
+@dataclass
+class AppStateARMInspection:
+    form_submitted: bool = False
+    pdf_download:bool = False
+    open_camera_name: str | None = None
+    safe_images:dict = field(default_factory=dict)
+    safe_notes:dict = field(default_factory=dict)
+    warning_images:dict = field(default_factory=dict)
+    warning_notes:dict = field(default_factory=dict)
+    bad_images:dict = field(default_factory=dict)
+    bad_notes:dict = field(default_factory=dict)
+
+def init_state_arm_inspection() -> AppStateARMInspection:
+    for key, default in AppStateARMInspection().__dict__.items():
+        st.session_state.setdefault(key, default)
+    return AppStateARMInspection(
+        form_submitted=st.session_state.form_submitted,
+        pdf_download=st.session_state.pdf_download,
+        open_camera_name=st.session_state.open_camera_name,
+        safe_images=st.session_state.safe_images,
+        safe_notes=st.session_state.safe_notes,
+        warning_images=st.session_state.warning_images,
+        warning_notes=st.session_state.warning_notes,
+        bad_images=st.session_state.bad_images,
+        bad_notes=st.session_state.bad_notes
+    )
+
+@dataclass
+class AppStateBoomInspection:
+    form_submitted: bool = False
+    pdf_download:bool = False
+    open_camera_name: str | None = None
+    safe_images:dict = field(default_factory=dict)
+    safe_notes:dict = field(default_factory=dict)
+    warning_images:dict = field(default_factory=dict)
+    warning_notes:dict = field(default_factory=dict)
+    bad_images:dict = field(default_factory=dict)
+    bad_notes:dict = field(default_factory=dict)
+
+def init_state_boom_inspection() -> AppStateBoomInspection:
+    for key, default in AppStateARMInspection().__dict__.items():
+        st.session_state.setdefault(key, default)
+    return AppStateBoomInspection(
+        form_submitted=st.session_state.form_submitted,
+        pdf_download=st.session_state.pdf_download,
+        open_camera_name=st.session_state.open_camera_name,
+        safe_images=st.session_state.safe_images,
+        safe_notes=st.session_state.safe_notes,
+        warning_images=st.session_state.warning_images,
+        warning_notes=st.session_state.warning_notes,
+        bad_images=st.session_state.bad_images,
+        bad_notes=st.session_state.bad_notes
+    )
+
+@dataclass
+class AppStateBucketInspection:
+    form_submitted: bool = False
+    pdf_download:bool = False
+    open_camera_name: str | None = None
+    safe_images:dict = field(default_factory=dict)
+    safe_notes:dict = field(default_factory=dict)
+    warning_images:dict = field(default_factory=dict)
+    warning_notes:dict = field(default_factory=dict)
+    bad_images:dict = field(default_factory=dict)
+    bad_notes:dict = field(default_factory=dict)
+
+def init_state_bucket_inspection() -> AppStateBucketInspection:
+    for key, default in AppStateARMInspection().__dict__.items():
+        st.session_state.setdefault(key, default)
+    return AppStateBucketInspection(
+        form_submitted=st.session_state.form_submitted,
+        pdf_download=st.session_state.pdf_download,
+        open_camera_name=st.session_state.open_camera_name,
+        safe_images=st.session_state.safe_images,
+        safe_notes=st.session_state.safe_notes,
+        warning_images=st.session_state.warning_images,
+        warning_notes=st.session_state.warning_notes,
+        bad_images=st.session_state.bad_images,
+        bad_notes=st.session_state.bad_notes
     )
 
 def input_radio(message, options=["👍 Good", "❌ Bad"]):
