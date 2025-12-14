@@ -1,5 +1,5 @@
 import streamlit as st
-from helper import page_config
+from functions.helper import page_config
 
 page_config()
 

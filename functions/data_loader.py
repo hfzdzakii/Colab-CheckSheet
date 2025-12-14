@@ -2,11 +2,9 @@ import json
 from pathlib import Path
 import streamlit as st
 
-DATA_PATH = Path(__file__).with_name("data_ketebalan_bucket.json")
-
 @st.cache_data
-def load_bucket_thickness_data():
-    with open(DATA_PATH, "r", encoding="utf-8") as f:
+def load_data(path):
+    with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
     
 def load_bucket_thickness_target():
@@ -60,3 +58,12 @@ def load_bucket_thickness_target():
         
         "plate_bracket", "top_box"
     ]
+
+def load_arm_inspection_target():
+    pass
+
+def load_boom_inspection_target():
+    pass
+
+def load_bucket_inspection_target():
+    pass

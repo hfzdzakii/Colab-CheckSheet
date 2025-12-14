@@ -1,20 +1,19 @@
 import streamlit as st
-import sys, os
 from datetime import datetime
 from pathlib import Path
 from PIL import Image
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from data_loader import load_bucket_thickness_data, load_bucket_thickness_target
-from helper import page_config, init_state_bucket_thickness, input_number, input_radio, reset_confirmation, create_report_bucket_thickness, input_text, process_identities
+from functions.data_loader import load_data, load_bucket_thickness_target
+from functions.helper import page_config, init_state_bucket_thickness, input_number, input_radio, reset_confirmation, create_report_bucket_thickness, input_text, process_identities
 page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 IMAGES_DIR = BASE_DIR / "images"
+DATA_FILE = BASE_DIR / "data" / "data_ketebalan_bucket.json"
 image_files = ["Body.png", "Bracket.png", "Get.png"]
 
 state_bucket_thickness = init_state_bucket_thickness()
 
-bucket_data = load_bucket_thickness_data() # dict
+bucket_data = load_data(DATA_FILE) # dict
 limit = 3
 bucket_target, bucket_target_snake = load_bucket_thickness_target() # list
 
