@@ -48,11 +48,8 @@ class AppStateARMInspection:
     pdf_download:bool = False
     open_camera_name: str | None = None
     safe_images:dict = field(default_factory=dict)
-    safe_notes:dict = field(default_factory=dict)
     warning_images:dict = field(default_factory=dict)
-    warning_notes:dict = field(default_factory=dict)
     bad_images:dict = field(default_factory=dict)
-    bad_notes:dict = field(default_factory=dict)
 
 def init_state_arm_inspection() -> AppStateARMInspection:
     for key, default in AppStateARMInspection().__dict__.items():
@@ -62,11 +59,8 @@ def init_state_arm_inspection() -> AppStateARMInspection:
         pdf_download=st.session_state.pdf_download,
         open_camera_name=st.session_state.open_camera_name,
         safe_images=st.session_state.safe_images,
-        safe_notes=st.session_state.safe_notes,
         warning_images=st.session_state.warning_images,
-        warning_notes=st.session_state.warning_notes,
         bad_images=st.session_state.bad_images,
-        bad_notes=st.session_state.bad_notes
     )
 
 @dataclass
@@ -75,11 +69,8 @@ class AppStateBoomInspection:
     pdf_download:bool = False
     open_camera_name: str | None = None
     safe_images:dict = field(default_factory=dict)
-    safe_notes:dict = field(default_factory=dict)
     warning_images:dict = field(default_factory=dict)
-    warning_notes:dict = field(default_factory=dict)
     bad_images:dict = field(default_factory=dict)
-    bad_notes:dict = field(default_factory=dict)
 
 def init_state_boom_inspection() -> AppStateBoomInspection:
     for key, default in AppStateARMInspection().__dict__.items():
@@ -89,11 +80,8 @@ def init_state_boom_inspection() -> AppStateBoomInspection:
         pdf_download=st.session_state.pdf_download,
         open_camera_name=st.session_state.open_camera_name,
         safe_images=st.session_state.safe_images,
-        safe_notes=st.session_state.safe_notes,
         warning_images=st.session_state.warning_images,
-        warning_notes=st.session_state.warning_notes,
         bad_images=st.session_state.bad_images,
-        bad_notes=st.session_state.bad_notes
     )
 
 @dataclass
@@ -102,11 +90,8 @@ class AppStateBucketInspection:
     pdf_download:bool = False
     open_camera_name: str | None = None
     safe_images:dict = field(default_factory=dict)
-    safe_notes:dict = field(default_factory=dict)
     warning_images:dict = field(default_factory=dict)
-    warning_notes:dict = field(default_factory=dict)
     bad_images:dict = field(default_factory=dict)
-    bad_notes:dict = field(default_factory=dict)
 
 def init_state_bucket_inspection() -> AppStateBucketInspection:
     for key, default in AppStateARMInspection().__dict__.items():
@@ -116,21 +101,46 @@ def init_state_bucket_inspection() -> AppStateBucketInspection:
         pdf_download=st.session_state.pdf_download,
         open_camera_name=st.session_state.open_camera_name,
         safe_images=st.session_state.safe_images,
-        safe_notes=st.session_state.safe_notes,
         warning_images=st.session_state.warning_images,
-        warning_notes=st.session_state.warning_notes,
         bad_images=st.session_state.bad_images,
-        bad_notes=st.session_state.bad_notes
     )
 
-def input_radio(message, options=["👍 Good", "❌ Bad"]):
+def input_radio(message, option):
+    if option == "thickness":
+        options = ["👍 Good", "❌ Bad"]
+    if option == "periode":
+        options = ["PS 1", "PS 2", "PS 3", "PS 4"]
     return st.radio(message, options, horizontal=True, index=None)
+
+def input_multiselect(message, option):
+    if option == "pemeriksaan":
+        options = ["⚡ Ultrasonic Test ✨", "💧 Penetrant Test 🔍", "👀 Visual Test 🔍"]
+    return st.multiselect(message, options, default=None)
+
+def input_selectbox(message, option):
+    if option == "condition":
+        options = ["-", "✅ Good Condition 👍", "❌ Bad Condition ⚠️", "🛠️ Sudah Repair Hasil Baik ✅", "🔁🛠️ Sudah Repair, Repair Ulang (REDO) ⚠️"]
+    if option == "category":
+        options = ["-", "🚨 Action Sekarang Juga ⚡", "⏳ Action < 72 Jam ⏰", "📅 Action saat Service selanjutnya 🔧", "🛠️ Action saat Overhaul (General Repair) 🏗️"]
+    if option == "remark":
+        options = ["-", "❓ LOST", "💥 CRACK", "⚙️ WEAR", "🔨 DAMAGE", "✅ NO DEFECT"]
+    return st.selectbox(message, options)
 
 def input_number(message, help):
     return st.number_input(message, max_value=help["std"], min_value=0.0, format="%.2f", placeholder="Gunakan titik (.) sebagai pengganti koma (,)", help=f"std:{help["std"]}, min:{help["min"]}", value=None)
 
 def input_text(message):
     return st.text_input(message, value=None)
+
+def create_inspection_inputs():
+    col1, col2 = st.columns(2)
+    with col1:
+        pemeriksaan = input_multiselect("Jenis Pemeriksaan", "pemeriksaan")
+        condition = input_selectbox("Jenis Kondisi", "condition")
+    with col2:
+        category = input_selectbox("Kategori", "category")
+        remark = input_selectbox("Remark", "remark")
+    return pemeriksaan, condition, category, remark
 
 @st.dialog("Yakin melakukan Reset?")
 def reset_confirmation():

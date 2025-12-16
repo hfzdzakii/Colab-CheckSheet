@@ -60,10 +60,52 @@ def load_bucket_thickness_target():
     ]
 
 def load_arm_inspection_target():
-    pass
+    return [
+        "Arm Head",
+        "Welded Side Arm Bottom",
+        "Welded Side Arm Head",
+        "Boss Pin Arm To Boom",
+        "Arm Foot",
+        "Bracket Link H1",
+        "Bracket Link H2"
+    ], [
+        "arm_head",
+        "welded_side_arm_bottom",
+        "welded_side_arm_head",
+        "boss_pin_arm_to_boom",
+        "arm_foot",
+        "bracket_link_h1",
+        "bracket_link_h2"
+    ]
 
 def load_boom_inspection_target():
-    pass
+    return [
+        "Boom Head",
+        "Body Boom Top",
+        "Bracket Of Bottom Arm Cyl",
+        "Body Boom Bottom",
+        "Boom Foot"
+    ], [
+        "boom_head",
+        "body_boom_top",
+        "bracket_of_bottom_arm_cyl",
+        "body_boom_bottom",
+        "boom_foot"
+    ]
 
 def load_bucket_inspection_target():
-    pass
+    return [
+        "Heel Shroud",
+        "Side Cutters",
+        "Kupingan Bucket & Area Pin",
+        "Welding Base Plate LH/RH",
+        "Lip Shroud",
+        "Adaptor Bucket"
+    ], [
+        "heel_shroud",
+        "side_cutters",
+        "kupingan_bucket_and_area_pin",
+        "welding_base_plate_lh_rh",
+        "lip_shroud",
+        "adaptor_bucket"
+    ]

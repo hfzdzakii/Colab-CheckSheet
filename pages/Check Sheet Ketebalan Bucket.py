@@ -50,19 +50,19 @@ with st.form("form_ketebalan_bucket"):
     st.subheader("G E T")
     get1, get2, get3 = st.columns(3)
     with get1:
-        bucket_tooth = input_radio("1\\. Bucket Toothss")
-        lock_bucket_tooth = input_radio("2\\. Lock, Bucket Tooth")
-        adapter = input_radio("3\\. Adapter")
+        bucket_tooth = input_radio("1\\. Bucket Toothss", "thickness")
+        lock_bucket_tooth = input_radio("2\\. Lock, Bucket Tooth", "thickness")
+        adapter = input_radio("3\\. Adapter", "thickness")
         choky_bar_top = input_number("4\\. Choky Bar Top / Adapter Top Wear Plate", help=bucket_data["GET"]["choky_bar_top"])
     with get2:
         choky_bar_side = input_number("5\\. Choky Bar Side / Adapter Side Wear Plate", help=bucket_data["GET"]["choky_bar_side"])
-        lip_shroud = input_radio("6\\. Lip Shroud / Toplok")
+        lip_shroud = input_radio("6\\. Lip Shroud / Toplok", "thickness")
         base_plate = input_number("7\\. Base Plate / Cutting Edge", help=bucket_data["GET"]["base_plate"])
         cutting_edge_top = input_number("8\\. Cutting Edge Top Wear Plate", help=bucket_data["GET"]["cutting_edge_top"])
     with get3:
         cutting_edge_bottom = input_number("9\\. Cutting Edge Bottom Wear Plate", help=bucket_data["GET"]["cutting_edge_bottom"])
-        wing_shroud = input_radio("10\\. Wing Shroud")
-        heels_shroud = input_radio("11\\. Heels Shroud")
+        wing_shroud = input_radio("10\\. Wing Shroud", "thickness")
+        heels_shroud = input_radio("11\\. Heels Shroud", "thickness")
 
     st.space("small")
     
@@ -102,8 +102,8 @@ with st.form("form_ketebalan_bucket"):
     
     st.header("BRACKET")
     st.subheader("BRACKET STRUCTURE")
-    plate_bracket = input_radio("28\\. Plate, Bracket Mounting")
-    top_box = input_radio("29\\. Top Box")
+    plate_bracket = input_radio("28\\. Plate, Bracket Mounting", "thickness")
+    top_box = input_radio("29\\. Top Box", "thickness")
     
     submitted = st.form_submit_button("Save")
 

@@ -1,0 +1,66 @@
+{
+    "ARM": {
+        "arm_head": {
+            "std1": "No Defect"
+        },
+        "welded_side_arm_bottom": {
+            "std1": "No Defect"
+        },
+        "welded_side_arm_head": {
+            "std1": "No Defect"
+        },
+        "boss_pin_arm_to_boom": {
+            "std1": "No Defect"
+        },
+        "arm_foot": {
+            "std1": "No Defect"
+        },
+        "bracket_link_h1": {
+            "std1": "No Defect"
+        },
+        "bracket_link_h2": {
+            "std1": "No Defect"
+        }
+    },
+    "BOOM": {
+        "boom_head": {
+            "std1": "No Defect"
+        },
+        "body_boom_top": {
+            "std1": "No Defect"
+        },
+        "bracket_of_bottom_arm_cyl": {
+            "std1": "No Defect"
+        },
+        "body_boom_bottom": {
+            "std1": "No Defect"
+        },
+        "boom_foot": {
+            "std1": "No Defect"
+        }
+    },
+    "BUCKET": {
+        "heel_shroud": {
+            "std1": "5 PCS",
+            "std2": "No Defect"
+        },
+        "side_cutters": {
+            "std1": "4 PCS",
+            "std2": "No Defect"
+        },
+        "kupingan_bucket_and_area_pin": {
+            "std1": "No Defect"
+        },
+        "welding_base_plate_lh_rh": {
+            "std1": "No Defect"
+        },
+        "lip_shroud": {
+            "std1": "4 PCS",
+            "std2": "No Defect"
+        },
+        "adaptor_bucket": {
+            "std1": "5 PCS",
+            "std2": "No Defect"
+        }
+    }
+}
