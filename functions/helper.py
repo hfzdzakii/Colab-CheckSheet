@@ -1,6 +1,7 @@
 import streamlit as st
 import time
 import tempfile
+from PIL import Image
 from dataclasses import dataclass, field
 from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
@@ -47,9 +48,7 @@ class AppStateARMInspection:
     form_submitted: bool = False
     pdf_download:bool = False
     open_camera_name: str | None = None
-    safe_images:dict = field(default_factory=dict)
-    warning_images:dict = field(default_factory=dict)
-    bad_images:dict = field(default_factory=dict)
+    images:dict = field(default_factory=dict)
 
 def init_state_arm_inspection() -> AppStateARMInspection:
     for key, default in AppStateARMInspection().__dict__.items():
@@ -58,52 +57,50 @@ def init_state_arm_inspection() -> AppStateARMInspection:
         form_submitted=st.session_state.form_submitted,
         pdf_download=st.session_state.pdf_download,
         open_camera_name=st.session_state.open_camera_name,
-        safe_images=st.session_state.safe_images,
-        warning_images=st.session_state.warning_images,
-        bad_images=st.session_state.bad_images,
+        images=st.session_state.images,
     )
 
-@dataclass
-class AppStateBoomInspection:
-    form_submitted: bool = False
-    pdf_download:bool = False
-    open_camera_name: str | None = None
-    safe_images:dict = field(default_factory=dict)
-    warning_images:dict = field(default_factory=dict)
-    bad_images:dict = field(default_factory=dict)
+# @dataclass
+# class AppStateBoomInspection:
+#     form_submitted: bool = False
+#     pdf_download:bool = False
+#     open_camera_name: str | None = None
+#     safe_images:dict = field(default_factory=dict)
+#     warning_images:dict = field(default_factory=dict)
+#     bad_images:dict = field(default_factory=dict)
 
-def init_state_boom_inspection() -> AppStateBoomInspection:
-    for key, default in AppStateARMInspection().__dict__.items():
-        st.session_state.setdefault(key, default)
-    return AppStateBoomInspection(
-        form_submitted=st.session_state.form_submitted,
-        pdf_download=st.session_state.pdf_download,
-        open_camera_name=st.session_state.open_camera_name,
-        safe_images=st.session_state.safe_images,
-        warning_images=st.session_state.warning_images,
-        bad_images=st.session_state.bad_images,
-    )
+# def init_state_boom_inspection() -> AppStateBoomInspection:
+#     for key, default in AppStateARMInspection().__dict__.items():
+#         st.session_state.setdefault(key, default)
+#     return AppStateBoomInspection(
+#         form_submitted=st.session_state.form_submitted,
+#         pdf_download=st.session_state.pdf_download,
+#         open_camera_name=st.session_state.open_camera_name,
+#         safe_images=st.session_state.safe_images,
+#         warning_images=st.session_state.warning_images,
+#         bad_images=st.session_state.bad_images,
+#     )
 
-@dataclass
-class AppStateBucketInspection:
-    form_submitted: bool = False
-    pdf_download:bool = False
-    open_camera_name: str | None = None
-    safe_images:dict = field(default_factory=dict)
-    warning_images:dict = field(default_factory=dict)
-    bad_images:dict = field(default_factory=dict)
+# @dataclass
+# class AppStateBucketInspection:
+#     form_submitted: bool = False
+#     pdf_download:bool = False
+#     open_camera_name: str | None = None
+#     safe_images:dict = field(default_factory=dict)
+#     warning_images:dict = field(default_factory=dict)
+#     bad_images:dict = field(default_factory=dict)
 
-def init_state_bucket_inspection() -> AppStateBucketInspection:
-    for key, default in AppStateARMInspection().__dict__.items():
-        st.session_state.setdefault(key, default)
-    return AppStateBucketInspection(
-        form_submitted=st.session_state.form_submitted,
-        pdf_download=st.session_state.pdf_download,
-        open_camera_name=st.session_state.open_camera_name,
-        safe_images=st.session_state.safe_images,
-        warning_images=st.session_state.warning_images,
-        bad_images=st.session_state.bad_images,
-    )
+# def init_state_bucket_inspection() -> AppStateBucketInspection:
+#     for key, default in AppStateARMInspection().__dict__.items():
+#         st.session_state.setdefault(key, default)
+#     return AppStateBucketInspection(
+#         form_submitted=st.session_state.form_submitted,
+#         pdf_download=st.session_state.pdf_download,
+#         open_camera_name=st.session_state.open_camera_name,
+#         safe_images=st.session_state.safe_images,
+#         warning_images=st.session_state.warning_images,
+#         bad_images=st.session_state.bad_images,
+#     )
 
 def input_radio(message, option):
     if option == "thickness":
@@ -132,7 +129,7 @@ def input_number(message, help):
 def input_text(message):
     return st.text_input(message, value=None)
 
-def create_inspection_inputs():
+def create_inspection_inputs(name):
     col1, col2 = st.columns(2)
     with col1:
         pemeriksaan = input_multiselect("Jenis Pemeriksaan", "pemeriksaan")
@@ -140,6 +137,30 @@ def create_inspection_inputs():
     with col2:
         category = input_selectbox("Kategori", "category")
         remark = input_selectbox("Remark", "remark")
+    img_slot = st.empty()
+    saved_img = st.session_state.images.get(name)
+    if saved_img is not None:
+        img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
+        if st.button("Ambil ulang gambar!", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
+            st.session_state.open_camera_name = name
+            st.rerun()
+    else :
+        if st.button("Klik untuk membuka Kamera!", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
+            st.session_state.open_camera_name = name
+            st.rerun()
+    if st.session_state.open_camera_name == name:
+        photo = st.camera_input(f"Upload Dokumentasi - {name}!")
+        if photo is not None:
+            if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", type="primary"):
+                try:
+                    image = Image.open(photo)
+                    st.session_state.images[name] = image
+                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
+                    photo = None
+                    st.session_state.open_camera_name = None
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"❌ Error : {e}")
     return pemeriksaan, condition, category, remark
 
 @st.dialog("Yakin melakukan Reset?")
@@ -150,21 +171,33 @@ def reset_confirmation():
     if st.button("Reset!", type="primary", icon=":material/delete:", width="stretch"):
         for key in st.session_state.keys():
             del st.session_state[key]
-        st.rerun()
         
-def process_identities(identities):
-    nama_processed = f"Nama: {identities[0]}"
-    nrp_processed = f"NRP: {identities[1]}"
-    jabatan_processed = f"Jabatan: {identities[2]}"
-    district_processed = f"District: {identities[3]}"
-    date_processed = f"Tanggal Insp: {identities[4]}"
-    egi_processed = f"EGI: {identities[5]}"
-    hm_unit_processed = f"HM Unit: {identities[6]}"
-    ps_processed = f"PS: {identities[7]}"
-    metode_insp_processed = f"Metode Insp: {identities[8]}"
-    return [nama_processed, nrp_processed, jabatan_processed,
-            district_processed, date_processed, egi_processed,
-            hm_unit_processed, ps_processed, metode_insp_processed]
+def process_identities(identities, mode):
+    if mode == "thickness":
+        nama_processed = f"Nama: {identities[0]}"
+        nrp_processed = f"NRP: {identities[1]}"
+        jabatan_processed = f"Jabatan: {identities[2]}"
+        district_processed = f"District: {identities[3]}"
+        date_processed = f"Tanggal Insp: {identities[4]}"
+        egi_processed = f"EGI: {identities[5]}"
+        hm_unit_processed = f"HM Unit: {identities[6]}"
+        ps_processed = f"PS: {identities[7]}"
+        metode_insp_processed = f"Metode Insp: {identities[8]}"
+        return [nama_processed, nrp_processed, jabatan_processed,
+                district_processed, date_processed, egi_processed,
+                hm_unit_processed, ps_processed, metode_insp_processed]
+    if mode == "inspection":
+        nama_processed = f"Nama: {identities[0]}"
+        code_unit_processed = f"Code Unit: {identities[1]}"
+        egi_processed = f"EGI: {identities[2]}"
+        district_processed = f"District: {identities[3]}"
+        hours_meter_processed = f"Hours Meter: {identities[4]}"
+        date_processed = f"Tanggal Insp: {identities[5]}"
+        periode_service_processed = f"Periode Service: {identities[6]}"
+        return [nama_processed, code_unit_processed, egi_processed,
+                district_processed, hours_meter_processed, date_processed,
+                periode_service_processed]
+
                                                 # targets : zip(bucket_target, required_fields)
 def create_report_bucket_thickness(identities, targets_and_data, s_flags, w_flags, b_flags, w_imgs, b_imgs, w_notes, b_notes): # flag : list | notes : dict
     buffer = BytesIO()

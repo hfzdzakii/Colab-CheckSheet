@@ -140,7 +140,7 @@ if submitted:
         st.session_state.bad_notes = {}        
     
 if st.session_state.form_submitted:
-    identities_processed = process_identities(identities)
+    identities_processed = process_identities(identities, "thickness")
     
     temp_dict = dict(zip(bucket_target_snake, required_fields))
     
@@ -199,9 +199,8 @@ if st.session_state.form_submitted:
                             photo = None
                             st.session_state.open_camera_name = None
                             st.rerun()
-                            st.toast("✔️ Foto berhasil diupload!")
                         except Exception as e:
-                            st.toast(f"❌ Error : {e}")
+                            st.error(f"❌ Error : {e}")
         st.divider()
         
     if bad_flags:
@@ -231,10 +230,9 @@ if st.session_state.form_submitted:
                             img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
                             photo = None
                             st.session_state.open_camera_name = None
-                            st.toast("✔️ Foto berhasil diupload!")
                             st.rerun()
                         except Exception as e:
-                            st.toast(f"❌ Error : {e}")
+                            st.error(f"❌ Error : {e}")
         st.divider()
     
     if st.button("Reset"):
