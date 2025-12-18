@@ -1,7 +1,7 @@
 import streamlit as st
 from pathlib import Path
 from functions.data_loader import load_data, load_arm_inspection_target
-from functions.helper import page_config, init_state_arm_inspection, input_text, input_radio, create_inspection_inputs, process_identities
+from functions.helper import page_config, init_state_arm_inspection, input_text, input_radio, create_inspection_inputs, process_identities, reset_confirmation
 page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -62,6 +62,8 @@ with st.form("form_inspeksi_arm"):
     st.subheader("Mechanic / Welder Comment")
     comment = st.text_area("📝 Masukkan Komentar Setelah Inspeksi!")
     
+    if st.button("Reset"):
+        reset_confirmation()
     submitted = st.form_submit_button("Save")
     
 identities = [nama, code_unit, egi, district, hours_meter, 
@@ -92,6 +94,6 @@ if st.session_state.form_submitted:
     identities_processed = process_identities(identities, "inspection")
     
     required_fields_modified = [required_fields[i:i+4] for i in range(0, len(required_fields), 4)]
-    temp_dict = dict(zip(arm_target, required_fields_modified))
+    final_dict = dict(zip(arm_target, required_fields_modified))
     
     
