@@ -37,7 +37,7 @@ st.header("NDT ARM")
 # ====
 for idx, (target, target_snake) in enumerate(list(zip(arm_target, arm_target_snake))[:2], start=1):
     st.subheader(f"{idx}\\. {target}", help="\n".join(str(i) for i in arm_data[target_snake].values()))
-    create_inspection_inputs2(target, target_snake)
+    create_inspection_inputs2(target)
 # ====
 st.subheader("Mechanic / Welder Comment")
 comment = st.text_area("📝 Masukkan Komentar Setelah Inspeksi!")
