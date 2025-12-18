@@ -160,7 +160,7 @@ def apply_data_inspection(names, names_snake):
             "condition": st.session_state[f"{name_snake}_condition"],
             "category": st.session_state[f"{name_snake}_category"],
             "remark": st.session_state[f"{name_snake}_remark"],
-            "image": st.session_state[f"{names_snake}_gambar"],
+            "image": st.session_state[f"{name_snake}_gambar"],
         }
 
 def create_inspection_inputs(name):
