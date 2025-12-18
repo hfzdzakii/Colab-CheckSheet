@@ -48,15 +48,30 @@ class AppStateARMInspection:
     form_submitted: bool = False
     pdf_download:bool = False
     open_camera_name: str | None = None
+    data: dict = field(default_factory=dict)
     images:dict = field(default_factory=dict)
 
-def init_state_arm_inspection() -> AppStateARMInspection:
-    for key, default in AppStateARMInspection().__dict__.items():
-        st.session_state.setdefault(key, default)
+def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
+    st.session_state.setdefault("form_submitted", False)
+    st.session_state.setdefault("pdf_download", False)
+    st.session_state.setdefault("open_camera_name", None)
+    st.session_state.setdefault("data", {})
+    st.session_state.setdefault("images", {})
+    for target in targets:
+        st.session_state.data.setdefault(
+            target,
+            {
+                "pemeriksaan": None,
+                "condition": None,
+                "category": None,
+                "remark": None,
+            }
+        )
     return AppStateARMInspection(
         form_submitted=st.session_state.form_submitted,
         pdf_download=st.session_state.pdf_download,
         open_camera_name=st.session_state.open_camera_name,
+        data=st.session_state.data,
         images=st.session_state.images,
     )
 
@@ -109,19 +124,19 @@ def input_radio(message, option):
         options = ["PS 1", "PS 2", "PS 3", "PS 4"]
     return st.radio(message, options, horizontal=True, index=None)
 
-def input_multiselect(message, option):
+def input_multiselect(message, option, key):
     if option == "pemeriksaan":
         options = ["⚡ Ultrasonic Test ✨", "💧 Penetrant Test 🔍", "👀 Visual Test 🔍"]
-    return st.multiselect(message, options, default=None)
+    return st.multiselect(message, options, default=[], key=key)
 
-def input_selectbox(message, option):
+def input_selectbox(message, option, key):
     if option == "condition":
         options = ["-", "✅ Good Condition 👍", "❌ Bad Condition ⚠️", "🛠️ Sudah Repair Hasil Baik ✅", "🔁🛠️ Sudah Repair, Repair Ulang (REDO) ⚠️"]
     if option == "category":
         options = ["-", "🚨 Action Sekarang Juga ⚡", "⏳ Action < 72 Jam ⏰", "📅 Action saat Service selanjutnya 🔧", "🛠️ Action saat Overhaul (General Repair) 🏗️"]
     if option == "remark":
         options = ["-", "❓ LOST", "💥 CRACK", "⚙️ WEAR", "🔨 DAMAGE", "✅ NO DEFECT"]
-    return st.selectbox(message, options)
+    return st.selectbox(message, options, key=key)
 
 def input_number(message, help):
     return st.number_input(message, max_value=help["std"], min_value=0.0, format="%.2f", placeholder="Gunakan titik (.) sebagai pengganti koma (,)", help=f"std:{help["std"]}, min:{help["min"]}", value=None)
@@ -129,14 +144,25 @@ def input_number(message, help):
 def input_text(message):
     return st.text_input(message, value=None)
 
+def create_inspection_inputs2(name, name_snake):
+    col1, col2 = st.columns(2)
+    with col1:
+        input_multiselect("Jenis Pemeriksaan", "pemeriksaan", f"{name_snake}_pemeriksaan")
+        input_selectbox("Jenis Kondisi", "condition", f"{name_snake}_condition")
+    with col2:
+        input_selectbox("Kategori", "category", f"{name_snake}_category")
+        input_selectbox("Remark", "remark", f"{name_snake}_remark")
+    enable = st.checkbox("Buka Kamera", key=f"{name_snake}_checkbox")
+    st.camera_input("Take a picture", disabled=not enable, key=f"{name_snake}_gambar")
+
 def create_inspection_inputs(name):
     col1, col2 = st.columns(2)
     with col1:
-        pemeriksaan = input_multiselect("Jenis Pemeriksaan", "pemeriksaan")
-        condition = input_selectbox("Jenis Kondisi", "condition")
+        pemeriksaan = input_multiselect("Jenis Pemeriksaan", "pemeriksaan", None)
+        condition = input_selectbox("Jenis Kondisi", "condition", None)
     with col2:
-        category = input_selectbox("Kategori", "category")
-        remark = input_selectbox("Remark", "remark")
+        category = input_selectbox("Kategori", "category", None)
+        remark = input_selectbox("Remark", "remark", None)
     img_slot = st.empty()
     saved_img = st.session_state.images.get(name)
     if saved_img is not None:

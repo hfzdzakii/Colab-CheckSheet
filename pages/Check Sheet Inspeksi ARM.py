@@ -9,10 +9,9 @@ IMAGE_DIR = None
 DATA_FILE = BASE_DIR / "data" / "data_inspeksi.json"
 image_files = []
 
-state_arm_inspection = init_state_arm_inspection()
-
 arm_data = load_data(DATA_FILE)["ARM"]
 arm_target, arm_target_snake = load_arm_inspection_target()
+state_arm_inspection = init_state_arm_inspection(arm_target)
 
 with st.sidebar:
     st.subheader("Gambar1")
@@ -62,8 +61,6 @@ with st.form("form_inspeksi_arm"):
     st.subheader("Mechanic / Welder Comment")
     comment = st.text_area("📝 Masukkan Komentar Setelah Inspeksi!")
     
-    if st.button("Reset"):
-        reset_confirmation()
     submitted = st.form_submit_button("Save")
     
 identities = [nama, code_unit, egi, district, hours_meter, 
