@@ -45,14 +45,14 @@ def init_state_bucket_thickness() -> AppStateBucketThickness:
     
 @dataclass
 class AppStateARMInspection:
-    form_submitted: bool = False
+    submitted: bool = False
     pdf_download:bool = False
     open_camera_name: str | None = None
     data: dict = field(default_factory=dict)
     images:dict = field(default_factory=dict)
 
 def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
-    st.session_state.setdefault("form_submitted", False)
+    st.session_state.setdefault("submitted", False)
     st.session_state.setdefault("pdf_download", False)
     st.session_state.setdefault("open_camera_name", None)
     st.session_state.setdefault("data", {})
@@ -68,7 +68,7 @@ def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
             }
         )
     return AppStateARMInspection(
-        form_submitted=st.session_state.form_submitted,
+        submitted=st.session_state.submitted,
         pdf_download=st.session_state.pdf_download,
         open_camera_name=st.session_state.open_camera_name,
         data=st.session_state.data,
@@ -77,7 +77,7 @@ def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
 
 # @dataclass
 # class AppStateBoomInspection:
-#     form_submitted: bool = False
+#     form_submitted: bool = False # <- Form nononono
 #     pdf_download:bool = False
 #     open_camera_name: str | None = None
 #     safe_images:dict = field(default_factory=dict)
@@ -144,19 +144,28 @@ def input_number(message, help):
 def input_text(message):
     return st.text_input(message, value=None)
 
-def create_inspection_inputs2(name, name_snake):
+def create_inspection_inputs2(names, names_snake):
     col1, col2 = st.columns(2)
     with col1:
-        input_multiselect("Jenis Pemeriksaan", "pemeriksaan", f"{name_snake}_pemeriksaan")
-        input_selectbox("Jenis Kondisi", "condition", f"{name_snake}_condition")
+        input_multiselect("Jenis Pemeriksaan", "pemeriksaan", f"{names_snake}_pemeriksaan")
+        input_selectbox("Jenis Kondisi", "condition", f"{names_snake}_condition")
     with col2:
-        input_selectbox("Kategori", "category", f"{name_snake}_category")
-        input_selectbox("Remark", "remark", f"{name_snake}_remark")
-    checkbox_key = f"{name_snake}_checkbox"
-    camera_key = f"{name_snake}_gambar"
+        input_selectbox("Kategori", "category", f"{names_snake}_category")
+        input_selectbox("Remark", "remark", f"{names_snake}_remark")
+    checkbox_key = f"{names_snake}_checkbox"
+    camera_key = f"{names_snake}_gambar"
     st.checkbox("Buka Kamera", key=checkbox_key)
     enable = st.session_state.get(checkbox_key, False)
     st.camera_input("Take a picture", disabled=not enable, key=camera_key)
+
+def apply_data_inspection(names, names_snake):
+    for name, name_snake in list(zip(names, names_snake)):
+        st.session_state.data[name] = {
+            "pemeriksaan": st.session_state[f"{name_snake}_pemeriksaan"],
+            "condition": st.session_state[f"{name_snake}_condition"],
+            "category": st.session_state[f"{name_snake}_category"],
+            "remark": st.session_state[f"{name_snake}_remark"],
+        }
 
 def create_inspection_inputs(name):
     col1, col2 = st.columns(2)

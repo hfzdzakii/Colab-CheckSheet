@@ -1,7 +1,7 @@
 import streamlit as st
 from pathlib import Path
 from functions.data_loader import load_data, load_arm_inspection_target
-from functions.helper import page_config, init_state_arm_inspection, input_text, input_radio, create_inspection_inputs2, process_identities, reset_confirmation
+from functions.helper import page_config, init_state_arm_inspection, input_text, input_radio, create_inspection_inputs2, process_identities, reset_confirmation, apply_data_inspection
 page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -50,7 +50,9 @@ identities = [nama, code_unit, egi, district, hours_meter,
                 date, periode_service, comment]
 
 if submitted:
+    apply_data_inspection(arm_target, arm_target_snake)
     st.session_state
+    
 #     if any((field == 0.0 or field == None or field == "") for field in [*identities, *required_fields]):
 #         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
 #         st.stop()
