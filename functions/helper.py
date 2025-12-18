@@ -47,16 +47,12 @@ def init_state_bucket_thickness() -> AppStateBucketThickness:
 class AppStateARMInspection:
     submitted: bool = False
     pdf_download:bool = False
-    open_camera_name: str | None = None
     data: dict = field(default_factory=dict)
-    images:dict = field(default_factory=dict)
 
 def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
     st.session_state.setdefault("submitted", False)
     st.session_state.setdefault("pdf_download", False)
-    st.session_state.setdefault("open_camera_name", None)
     st.session_state.setdefault("data", {})
-    st.session_state.setdefault("images", {})
     for target in targets:
         st.session_state.data.setdefault(
             target,
@@ -65,14 +61,13 @@ def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
                 "condition": None,
                 "category": None,
                 "remark": None,
+                "image": None,
             }
         )
     return AppStateARMInspection(
         submitted=st.session_state.submitted,
         pdf_download=st.session_state.pdf_download,
-        open_camera_name=st.session_state.open_camera_name,
         data=st.session_state.data,
-        images=st.session_state.images,
     )
 
 # @dataclass
@@ -144,7 +139,7 @@ def input_number(message, help):
 def input_text(message):
     return st.text_input(message, value=None)
 
-def create_inspection_inputs2(names, names_snake):
+def create_inspection_inputs2(names_snake):
     col1, col2 = st.columns(2)
     with col1:
         input_multiselect("Jenis Pemeriksaan", "pemeriksaan", f"{names_snake}_pemeriksaan")

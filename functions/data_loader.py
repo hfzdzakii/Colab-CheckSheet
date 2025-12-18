@@ -63,19 +63,19 @@ def load_arm_inspection_target():
     return [
         "Arm Head",
         "Welded Side Arm Bottom",
-        "Welded Side Arm Head",
-        "Boss Pin Arm To Boom",
-        "Arm Foot",
-        "Bracket Link H1",
-        "Bracket Link H2"
+        # "Welded Side Arm Head",
+        # "Boss Pin Arm To Boom",
+        # "Arm Foot",
+        # "Bracket Link H1",
+        # "Bracket Link H2"
     ], [
         "arm_head",
         "welded_side_arm_bottom",
-        "welded_side_arm_head",
-        "boss_pin_arm_to_boom",
-        "arm_foot",
-        "bracket_link_h1",
-        "bracket_link_h2"
+        # "welded_side_arm_head",
+        # "boss_pin_arm_to_boom",
+        # "arm_foot",
+        # "bracket_link_h1",
+        # "bracket_link_h2"
     ]
 
 def load_boom_inspection_target():
