@@ -50,6 +50,7 @@ identities = [nama, code_unit, egi, district, hours_meter,
                 date, periode_service, comment]
 
 if submitted:
+    st.session_state
     apply_data_inspection(arm_target, arm_target_snake)
     st.session_state
     
