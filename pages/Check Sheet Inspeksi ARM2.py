@@ -61,6 +61,7 @@ if submitted:
             
     identities_processed = process_identities(identities, "inspection")
     
+    
 #     for target in arm_target:
 #         if st.session_state.images.get(target) is None:
 #             st.error("❌ Ada gambar yang belum diambil. Silahkan ambil dokumentasi!")
