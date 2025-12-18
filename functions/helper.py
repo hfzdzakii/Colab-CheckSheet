@@ -152,8 +152,11 @@ def create_inspection_inputs2(name, name_snake):
     with col2:
         input_selectbox("Kategori", "category", f"{name_snake}_category")
         input_selectbox("Remark", "remark", f"{name_snake}_remark")
-    enable = st.checkbox("Buka Kamera", key=f"{name_snake}_checkbox")
-    st.camera_input("Take a picture", disabled=not enable, key=f"{name_snake}_gambar")
+    checkbox_key = f"{name_snake}_checkbox"
+    camera_key = f"{name_snake}_gambar"
+    st.checkbox("Buka Kamera", key=checkbox_key)
+    enable = st.session_state.get(checkbox_key, False)
+    st.camera_input("Take a picture", disabled=not enable, key=camera_key)
 
 def create_inspection_inputs(name):
     col1, col2 = st.columns(2)
