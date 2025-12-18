@@ -49,7 +49,8 @@ submitted = st.button("Save")
 identities = [nama, code_unit, egi, district, hours_meter, 
                 date, periode_service, comment]
 
-# if submitted:
+if submitted:
+    st.session_state
 #     if any((field == 0.0 or field == None or field == "") for field in [*identities, *required_fields]):
 #         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
 #         st.stop()
