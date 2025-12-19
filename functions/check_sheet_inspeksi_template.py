@@ -48,16 +48,16 @@ def inspection_template(part_name, data, targets, targets_snake):
                 st.error(f"❌ Ada data part {part_name} yang kosong. Silahkan diisi semuanya!")
                 st.stop()
                 
-        if any(st.session_state.images.get(f"{name_snake}_gambar") is None for name_snake in target_snake):
+        if any(st.session_state.images.get(f"{name_snake}_gambar") is None for name_snake in targets_snake):
             st.error("❌ Ada gambar yang belum diambil. Silahkan ambil dokumentasinya!")
             st.stop()
                 
-        identities_processed = process_identities(identities, "inspection")
         st.session_state.pdf_download = True
         st.rerun()
 
     if st.session_state.pdf_download:
-        pdf_buffer = create_report_inspections(part_name, identities, st.session_state.data, st.session_state.images)
+        identities_processed = process_identities(identities, "inspection")
+        pdf_buffer = create_report_inspections(part_name, identities_processed, st.session_state.data, st.session_state.images)
         now = datetime.now()
         timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
         pdf_dialog(pdf_buffer, f"Report_Inspeksi_{part_name}_{timestamp}.pdf")
