@@ -61,7 +61,7 @@ if submitted:
             st.error(f"❌ Ada data part {PART_NAME} yang kosong. Silahkan diisi semuanya!")
             st.stop()
             
-    if any(st.session_state.warning_images.get(f"{name_snake}_gambar") is None for name_snake in arm_target_snake):
+    if any(st.session_state.images.get(f"{name_snake}_gambar") is None for name_snake in arm_target_snake):
         st.error("❌ Ada gambar yang belum diambil. Silahkan ambil dokumentasinya!")
         st.stop()
             
