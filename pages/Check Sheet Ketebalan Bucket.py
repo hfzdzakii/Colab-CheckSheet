@@ -234,9 +234,6 @@ if st.session_state.form_submitted:
                         except Exception as e:
                             st.error(f"❌ Error : {e}")
         st.divider()
-    
-    if st.button("Reset"):
-        reset_confirmation()
 
     if st.button("📄 Download Laporan PDF!", disabled=False if st.session_state.open_camera_name==None else True):
         st.session_state.pdf_download = True

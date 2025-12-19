@@ -232,6 +232,7 @@ def reset_confirmation():
     if st.button("Reset!", type="primary", icon=":material/delete:", width="stretch"):
         for key in st.session_state.keys():
             del st.session_state[key]
+        st.rerun()
         
 def process_identities(identities, mode):
     if mode == "thickness":
@@ -287,7 +288,7 @@ def create_report_bucket_thickness(identities, targets_and_data, s_flags, w_flag
         ("BOTTOMPADDING", (0,0), (-1,-1), 6),
     ])
     
-    identity_table = Table(table_data, colWidths=[None, None, None])
+    identity_table = Table(table_data, colWidths=[doc.width / 3] * 3)
     identity_table.setStyle(table_style)
     elements.append(identity_table)
     elements.append(Spacer(1, 12))
@@ -372,6 +373,92 @@ def create_report_bucket_thickness(identities, targets_and_data, s_flags, w_flag
             
             if idx % 2 == 0 and idx<len(b_flags):
                 elements.append(PageBreak())
+            
+    doc.build(elements)
+    buffer.seek(0)
+    return buffer
+
+def create_report_inspections(part_name, identities, data, images):
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4,
+                            leftMargin=2*cm, rightMargin=2*cm,
+                            topMargin=2*cm, bottomMargin=2*cm)
+    styles = getSampleStyleSheet()
+    
+    elements = []
+    
+    title_style = styles["Title"]
+    elements.append(Paragraph(f"Laporan Inspeksi {part_name}", title_style))
+    elements.append(Spacer(1, 12))
+    
+    identity = identities[:-1]
+    identity.insert(4, "")
+    comment = identities[-1]
+    table_data = [identity[i:i+4] for i in range(0, 8, 4)]
+    
+    table_style = TableStyle([
+        ("SPAN", (0, 0), (0, 1)),
+        ("GRID", (0,0), (-1,-1), 0.5, colors.black),
+        ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
+        ("ALIGN", (0,0), (-1,-1), "LEFT"),
+        ("FONTSIZE", (0,0), (-1,-1), 9),
+        ("LEFTPADDING", (0,0), (-1,-1), 6),
+        ("RIGHTPADDING", (0,0), (-1,-1), 6),
+        ("TOPPADDING", (0,0), (-1,-1), 6),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 6),
+    ])
+    
+    identity_table = Table(table_data, colWidths=[doc.width / 4] * 4)
+    identity_table.setStyle(table_style)
+    elements.append(identity_table)
+    elements.append(Spacer(1, 12))
+    MAX_IMG_HEIGHT = 7.5 * cm
+    
+    bold_sub = ParagraphStyle(
+        name="BoldSub",
+        parent=styles["Heading2"],
+        fontName="Helvetica-Bold",
+        fontSize=12,
+        spaceAfter=6
+    )
+    
+    # Komentar
+    elements.append(Paragraph("Komentar dari Petugas:", bold_sub))
+    elements.append(Spacer(1, 2))
+    elements.append(Paragraph(f"{comment}", styles["Normal"]))
+    elements.append(Spacer(1, 6))
+    
+    # All Data
+    elements.append(Paragraph(f"Rincian Semua Part {part_name}!", bold_sub))
+    elements.append(Spacer(1, 6))
+    for idx, (target, part) in enumerate(data.items(), start=1): # data : target | image target_snake
+        target_snake = target.lower().replace(" ", "_")
+        elements.append(Paragraph(f"{idx}. {target}", styles["Heading3"]))
+        elements.append(Spacer(1, 3))
+        tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
+        images[f"{target_snake}_gambar"].save(tmp.name)
+        orig_w, orig_h = images[f"{target_snake}_gambar"].size
+        if orig_h == 0:
+            scale = 1.0
+        else:
+            scale = (MAX_IMG_HEIGHT) / orig_h
+        pdf_w = orig_w * scale
+        pdf_h = orig_h * scale
+        img_flow = RLImage(tmp.name, width=pdf_w, height=pdf_h)
+        img_flow.hAlign = "CENTER"
+        elements.append(img_flow)
+        elements.append(Spacer(1, 3))
+        elements.append(Paragraph(f"Jenis Pemeriksaan : {", ".join(str(i) for i in part["pemeriksaan"])}", styles["Normal"]))
+        elements.append(Spacer(1, 3))
+        elements.append(Paragraph(f"Status Kondisi : {part["condition"]}", styles["Normal"]))
+        elements.append(Spacer(1, 3))
+        elements.append(Paragraph(f"Kategori : {part["category"]}", styles["Normal"]))
+        elements.append(Spacer(1, 3))
+        elements.append(Paragraph(f"Remark : {part["remark"]}", styles["Normal"]))
+        elements.append(Spacer(1, 6))
+        
+        if idx % 2 == 0 and idx<len(data.items()):
+            elements.append(PageBreak())
             
     doc.build(elements)
     buffer.seek(0)

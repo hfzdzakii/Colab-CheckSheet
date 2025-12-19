@@ -1,7 +1,7 @@
 import streamlit as st
 from pathlib import Path
 from functions.data_loader import load_data, load_arm_inspection_target
-from functions.helper import page_config, init_state_arm_inspection, input_text, input_radio, create_inspection_inputs2, process_identities, reset_confirmation, apply_data_inspection
+from functions.helper import page_config, init_state_arm_inspection, input_text, input_radio, create_inspection_inputs2, process_identities, create_report_inspections, apply_data_inspection
 page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -42,8 +42,8 @@ for idx, (target, target_snake) in enumerate(list(zip(arm_target, arm_target_sna
 # ====
 st.subheader("Mechanic / Welder Comment")
 comment = st.text_area("📝 Masukkan Komentar Setelah Inspeksi!")
-    
-submitted = st.button("Save")
+
+submitted = st.button("Simpan", disabled=False if st.session_state.open_camera_name==None else True, type="primary")
     
 #  ===============================    
 identities = [nama, code_unit, egi, district, hours_meter, 
