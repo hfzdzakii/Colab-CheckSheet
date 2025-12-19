@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from PIL import Image
 from functions.data_loader import load_data, load_bucket_thickness_target
-from functions.helper import page_config, init_state_bucket_thickness, input_number, input_radio, reset_confirmation, create_report_bucket_thickness, input_text, process_identities
+from functions.helper import page_config, init_state_bucket_thickness, input_number, input_radio, pdf_dialog, create_report_bucket_thickness, input_text, process_identities
 page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -237,6 +237,7 @@ if st.session_state.form_submitted:
 
     if st.button("📄 Download Laporan PDF!", disabled=False if st.session_state.open_camera_name==None else True):
         st.session_state.pdf_download = True
+        # st.rerun()
         
     if st.session_state.pdf_download:
         missing_notes = []
@@ -277,6 +278,6 @@ if st.session_state.form_submitted:
                                                         st.session_state.bad_notes)
             now = datetime.now()
             timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-            st.download_button("Download PDF", pdf_buffer, file_name=f"Report_Ketebalan_Bucket_{timestamp}.pdf", mime="application/pdf", icon=":material/download:", disabled=False if st.session_state.open_camera_name==None else True)
-        
+            # st.download_button("Download PDF", pdf_buffer, file_name=f"Report_Ketebalan_Bucket_{timestamp}.pdf", mime="application/pdf", icon=":material/download:", disabled=False if st.session_state.open_camera_name==None else True)
+            pdf_dialog(pdf_buffer, f"Report_Ketebalan_Bucket_{timestamp}.pdf")
         

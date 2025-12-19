@@ -234,6 +234,21 @@ def reset_confirmation():
             del st.session_state[key]
         st.rerun()
         
+@st.dialog("Download Laporan", dismissible=False)
+def pdf_dialog(pdf_buffer, file_name):
+    st.write("PDF siap diunduh!")
+    st.download_button(
+        "Download PDF",
+        pdf_buffer,
+        file_name,
+        mime="application/pdf",
+        icon=":material/download:",
+        width="stretch"
+    )
+    if st.button("Tutup"):
+        st.session_state.pdf_download = False
+        st.rerun()
+        
 def process_identities(identities, mode):
     if mode == "thickness":
         nama_processed = f"Nama: {identities[0]}"

@@ -1,7 +1,8 @@
 import streamlit as st
+from datetime import datetime
 from pathlib import Path
 from functions.data_loader import load_data, load_arm_inspection_target
-from functions.helper import page_config, init_state_arm_inspection, input_text, input_radio, create_inspection_inputs2, process_identities, create_report_inspections, apply_data_inspection
+from functions.helper import page_config, init_state_arm_inspection, input_text, input_radio, create_inspection_inputs2, process_identities, create_report_inspections, apply_data_inspection, pdf_dialog
 page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -36,7 +37,7 @@ st.space("small")
 
 st.header("NDT ARM")
 # ====
-for idx, (target, target_snake) in enumerate(list(zip(arm_target, arm_target_snake))[:2], start=1):
+for idx, (target, target_snake) in enumerate(list(zip(arm_target, arm_target_snake))[:4], start=1):
     st.subheader(f"{idx}\\. {target}", help="\n".join(str(i) for i in arm_data[target_snake].values()))
     create_inspection_inputs2(target_snake)
 # ====
@@ -66,6 +67,14 @@ if submitted:
         st.stop()
             
     identities_processed = process_identities(identities, "inspection")
+    st.session_state.pdf_download = True
+    st.rerun()
+
+if st.session_state.pdf_download:
+    pdf_buffer = create_report_inspections(PART_NAME, identities, st.session_state.data, st.session_state.images)
+    now = datetime.now()
+    timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+    pdf_dialog(pdf_buffer, f"Report_Inspeksi_{PART_NAME}_{timestamp}.pdf")
     
     
 #     for target in arm_target:
