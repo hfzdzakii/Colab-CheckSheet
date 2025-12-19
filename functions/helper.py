@@ -142,7 +142,7 @@ def input_number(message, help):
 def input_text(message):
     return st.text_input(message, value=None)
 
-def create_inspection_inputs2(name_snake):
+def create_inspection_inputs(name_snake):
     col1, col2 = st.columns(2)
     with col1:
         input_multiselect("Jenis Pemeriksaan", "pemeriksaan", f"{name_snake}_pemeriksaan")
@@ -183,40 +183,6 @@ def apply_data_inspection(names, names_snake):
             "category": st.session_state[f"{name_snake}_category"],
             "remark": st.session_state[f"{name_snake}_remark"],
         }
-
-def create_inspection_inputs(name):
-    col1, col2 = st.columns(2)
-    with col1:
-        pemeriksaan = input_multiselect("Jenis Pemeriksaan", "pemeriksaan", None)
-        condition = input_selectbox("Jenis Kondisi", "condition", None)
-    with col2:
-        category = input_selectbox("Kategori", "category", None)
-        remark = input_selectbox("Remark", "remark", None)
-    img_slot = st.empty()
-    saved_img = st.session_state.images.get(name)
-    if saved_img is not None:
-        img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name.replace("_", " ").title()}", width=200)
-        if st.button("Ambil ulang gambar!", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
-            st.session_state.open_camera_name = name
-            st.rerun()
-    else :
-        if st.button("Klik untuk membuka Kamera!", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
-            st.session_state.open_camera_name = name
-            st.rerun()
-    if st.session_state.open_camera_name == name:
-        photo = st.camera_input(f"Upload Dokumentasi - {name.replace("_", " ").title()}!")
-        if photo is not None:
-            if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", type="primary"):
-                try:
-                    image = Image.open(photo)
-                    st.session_state.images[name] = image
-                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name.replace("_", " ").title()}", width=200)
-                    photo = None
-                    st.session_state.open_camera_name = None
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"❌ Error : {e}")
-    return pemeriksaan, condition, category, remark
         
 @st.dialog("Download Laporan", dismissible=False)
 def pdf_dialog(pdf_buffer, file_name):

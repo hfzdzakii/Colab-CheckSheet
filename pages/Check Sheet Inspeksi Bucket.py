@@ -19,4 +19,10 @@ with st.sidebar:
     st.subheader("Gambar2")
     st.subheader("Gambar3")
     
+
+st.write(target)
+st.write(target_snake)
+
+st.write(st.session_state)
+
 inspection_template(PART_NAME, data, target, target_snake)

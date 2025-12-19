@@ -1,6 +1,6 @@
 import streamlit as st
 from datetime import datetime
-from functions.helper import page_config, input_text, input_radio, create_inspection_inputs2, process_identities, create_report_inspections, apply_data_inspection, pdf_dialog
+from functions.helper import page_config, input_text, input_radio, create_inspection_inputs, process_identities, create_report_inspections, apply_data_inspection, pdf_dialog
 page_config()
 
 # ==========
@@ -25,7 +25,7 @@ def inspection_template(part_name, data, targets, targets_snake):
     # ====
     for idx, (target, target_snake) in enumerate(list(zip(targets, targets_snake)), start=1):
         st.subheader(f"{idx}\\. {target}", help="\n".join(str(i) for i in data[target_snake].values()))
-        create_inspection_inputs2(target_snake)
+        create_inspection_inputs(target_snake)
     # ====
     st.subheader("Mechanic / Welder Comment")
     comment = st.text_area("📝 Masukkan Komentar Setelah Inspeksi!")
@@ -37,7 +37,7 @@ def inspection_template(part_name, data, targets, targets_snake):
                     date, periode_service, comment]
 
     if submitted:
-        apply_data_inspection(target, target_snake)
+        apply_data_inspection(targets, targets_snake)
         
         if any((field == 0.0 or field == None or field == "") for field in identities):
             st.error("❌ Data Identitas atu catatan ada yang kosong. Silahkan diisi semuanya!")
