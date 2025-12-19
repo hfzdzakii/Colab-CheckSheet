@@ -48,14 +48,14 @@ class AppStateARMInspection:
     submitted: bool = False
     pdf_download:bool = False
     open_camera_name: str | None = None
-    images_temp: dict = field(default_factory=dict)
+    images: dict = field(default_factory=dict)
     data: dict = field(default_factory=dict)
 
 def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
     st.session_state.setdefault("submitted", False)
     st.session_state.setdefault("pdf_download", False)
     st.session_state.setdefault("open_camera_name", None)
-    st.session_state.setdefault("images_temp", {})
+    st.session_state.setdefault("images", {})
     st.session_state.setdefault("data", {})
     for target in targets:
         st.session_state.data.setdefault(
@@ -71,6 +71,7 @@ def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
         submitted=st.session_state.submitted,
         pdf_download=st.session_state.pdf_download,
         open_camera_name=st.session_state.open_camera_name,
+        images=st.session_state.images,
         data=st.session_state.data,
     )
 
