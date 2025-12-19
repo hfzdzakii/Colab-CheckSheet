@@ -44,14 +44,14 @@ def init_state_bucket_thickness() -> AppStateBucketThickness:
     )
     
 @dataclass
-class AppStateARMInspection:
+class AppStateInspection:
     submitted: bool = False
     pdf_download:bool = False
     open_camera_name: str | None = None
     images: dict = field(default_factory=dict)
     data: dict = field(default_factory=dict)
 
-def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
+def init_state_inspection(targets:list) -> AppStateInspection:
     st.session_state.setdefault("submitted", False)
     st.session_state.setdefault("pdf_download", False)
     st.session_state.setdefault("open_camera_name", None)
@@ -67,7 +67,7 @@ def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
                 "remark": None,
             }
         )
-    return AppStateARMInspection(
+    return AppStateInspection(
         submitted=st.session_state.submitted,
         pdf_download=st.session_state.pdf_download,
         open_camera_name=st.session_state.open_camera_name,
@@ -77,12 +77,11 @@ def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
 
 # @dataclass
 # class AppStateBoomInspection:
-#     form_submitted: bool = False # <- Form nononono
+#     submitted: bool = False
 #     pdf_download:bool = False
 #     open_camera_name: str | None = None
-#     safe_images:dict = field(default_factory=dict)
-#     warning_images:dict = field(default_factory=dict)
-#     bad_images:dict = field(default_factory=dict)
+#     images: dict = field(default_factory=dict)
+#     data: dict = field(default_factory=dict)
 
 # def init_state_boom_inspection() -> AppStateBoomInspection:
 #     for key, default in AppStateARMInspection().__dict__.items():
@@ -98,12 +97,11 @@ def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
 
 # @dataclass
 # class AppStateBucketInspection:
-#     form_submitted: bool = False
+#     submitted: bool = False
 #     pdf_download:bool = False
 #     open_camera_name: str | None = None
-#     safe_images:dict = field(default_factory=dict)
-#     warning_images:dict = field(default_factory=dict)
-#     bad_images:dict = field(default_factory=dict)
+#     images: dict = field(default_factory=dict)
+#     data: dict = field(default_factory=dict)
 
 # def init_state_bucket_inspection() -> AppStateBucketInspection:
 #     for key, default in AppStateARMInspection().__dict__.items():
