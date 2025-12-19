@@ -47,11 +47,15 @@ def init_state_bucket_thickness() -> AppStateBucketThickness:
 class AppStateARMInspection:
     submitted: bool = False
     pdf_download:bool = False
+    open_camera_name: str | None = None
+    images_temp: dict = field(default_factory=dict)
     data: dict = field(default_factory=dict)
 
 def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
     st.session_state.setdefault("submitted", False)
     st.session_state.setdefault("pdf_download", False)
+    st.session_state.setdefault("open_camera_name", None)
+    st.session_state.setdefault("images_temp", {})
     st.session_state.setdefault("data", {})
     for target in targets:
         st.session_state.data.setdefault(
@@ -61,12 +65,12 @@ def init_state_arm_inspection(targets:list) -> AppStateARMInspection:
                 "condition": None,
                 "category": None,
                 "remark": None,
-                "image": None,
             }
         )
     return AppStateARMInspection(
         submitted=st.session_state.submitted,
         pdf_download=st.session_state.pdf_download,
+        open_camera_name=st.session_state.open_camera_name,
         data=st.session_state.data,
     )
 
@@ -139,20 +143,43 @@ def input_number(message, help):
 def input_text(message):
     return st.text_input(message, value=None)
 
-def create_inspection_inputs2(names_snake):
+def create_inspection_inputs2(name_snake):
     col1, col2 = st.columns(2)
     with col1:
-        input_multiselect("Jenis Pemeriksaan", "pemeriksaan", f"{names_snake}_pemeriksaan")
-        input_selectbox("Jenis Kondisi", "condition", f"{names_snake}_condition")
+        input_multiselect("Jenis Pemeriksaan", "pemeriksaan", f"{name_snake}_pemeriksaan")
+        input_selectbox("Jenis Kondisi", "condition", f"{name_snake}_condition")
     with col2:
-        input_selectbox("Kategori", "category", f"{names_snake}_category")
-        input_selectbox("Remark", "remark", f"{names_snake}_remark")
-    checkbox_key = f"{names_snake}_checkbox"
-    camera_key = f"{names_snake}_gambar"
-    st.checkbox("Buka Kamera", key=checkbox_key)
-    enable = st.session_state.get(checkbox_key, False)
-    st.camera_input("Take a picture", disabled=not enable, key=camera_key)
-
+        input_selectbox("Kategori", "category", f"{name_snake}_category")
+        input_selectbox("Remark", "remark", f"{name_snake}_remark")
+    # camera_key = f"{name_snake}_gambar"
+    # st.checkbox("Buka Kamera", key=checkbox_key)
+    # enable = st.session_state.get(checkbox_key, False)
+    # st.camera_input("Take a picture", disabled=not enable, key=camera_key)
+    img_slot = st.empty()
+    saved_img = st.session_state.images.get(f"{name_snake}_gambar")
+    if saved_img is not None:
+        img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name_snake}", width=200)
+        if st.button("Ambil ulang gambar!", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
+            st.session_state.open_camera_name = name_snake
+            st.rerun()
+    else :
+        if st.button("Klik untuk membuka Kamera!", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
+            st.session_state.open_camera_name = name_snake
+            st.rerun()
+    if st.session_state.open_camera_name == name_snake:
+        photo = st.camera_input(f"Upload Dokumentasi - {name_snake}!")
+        if photo is not None:
+            if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", type="primary"):
+                try:
+                    image = Image.open(photo)
+                    st.session_state.images[f"{name_snake}_gambar"] = image
+                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name_snake}", width=200)
+                    photo = None
+                    st.session_state.open_camera_name = None
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"❌ Error : {e}")
+            
 def apply_data_inspection(names, names_snake):
     for name, name_snake in list(zip(names, names_snake)):
         st.session_state.data[name] = {
@@ -160,7 +187,6 @@ def apply_data_inspection(names, names_snake):
             "condition": st.session_state[f"{name_snake}_condition"],
             "category": st.session_state[f"{name_snake}_category"],
             "remark": st.session_state[f"{name_snake}_remark"],
-            "image": st.session_state[f"{name_snake}_gambar"],
         }
 
 def create_inspection_inputs(name):

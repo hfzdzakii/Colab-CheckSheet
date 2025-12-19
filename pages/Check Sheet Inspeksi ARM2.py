@@ -7,6 +7,7 @@ page_config()
 BASE_DIR = Path(__file__).resolve().parents[1]
 IMAGE_DIR = None
 DATA_FILE = BASE_DIR / "data" / "data_inspeksi.json"
+PART_NAME = "ARM"
 
 arm_data = load_data(DATA_FILE)["ARM"]
 arm_target, arm_target_snake = load_arm_inspection_target()
@@ -50,14 +51,19 @@ identities = [nama, code_unit, egi, district, hours_meter,
 
 if submitted:
     apply_data_inspection(arm_target, arm_target_snake)
+    
     if any((field == 0.0 or field == None or field == "") for field in identities):
-        st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
+        st.error("❌ Data Identitas atu catatan ada yang kosong. Silahkan diisi semuanya!")
         st.stop()
         
     for target, fields in st.session_state.data.items():
         if any(v in (None, "", "-") or (isinstance(v, list) and not v) for v in fields.values()):
-            st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
+            st.error(f"❌ Ada data part {PART_NAME} yang kosong. Silahkan diisi semuanya!")
             st.stop()
+            
+    if any(st.session_state.warning_images.get(f"{name_snake}_gambar") is None for name_snake in arm_target_snake):
+        st.error("❌ Ada gambar yang belum diambil. Silahkan ambil dokumentasinya!")
+        st.stop()
             
     identities_processed = process_identities(identities, "inspection")
     
