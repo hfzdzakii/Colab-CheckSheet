@@ -60,6 +60,4 @@ def inspection_template(part_name, data, targets, targets_snake):
         pdf_buffer = create_report_inspections(part_name, identities_processed, st.session_state.data, st.session_state.images)
         now = datetime.now()
         timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-        # pdf_dialog(pdf_buffer, f"Report_Inspeksi_{part_name}_{timestamp}.pdf")
-        st.write(identities)
-        st.write(identities_processed)
+        pdf_dialog(pdf_buffer, f"Report_Inspeksi_{part_name}_{timestamp}.pdf")
