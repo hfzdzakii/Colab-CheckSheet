@@ -424,7 +424,7 @@ def create_report_inspections(part_name, identities, data, images):
         elements.append(Paragraph(f"Remark : {part["remark"]}", styles["Normal"]))
         elements.append(Spacer(1, 6))
         
-        if idx % 2 == 0 and idx<len(data.items()):
+        if idx % 2 == 1 and idx<len(data.items()):
             elements.append(PageBreak())
             
     doc.build(elements)
