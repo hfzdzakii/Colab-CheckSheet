@@ -1,5 +1,5 @@
 {
-    "ARM": {
+    "Arm": {
         "arm_head": {
             "std1": "No Defect"
         },
@@ -22,7 +22,7 @@
             "std1": "No Defect"
         }
     },
-    "BOOM": {
+    "Boom": {
         "boom_head": {
             "std1": "No Defect"
         },
@@ -39,7 +39,7 @@
             "std1": "No Defect"
         }
     },
-    "BUCKET": {
+    "Bucket": {
         "heel_shroud": {
             "std1": "5 PCS",
             "std2": "No Defect"
