@@ -160,17 +160,17 @@ def create_inspection_inputs2(name_snake):
     saved_img = st.session_state.images.get(f"{name_snake}_gambar")
     if saved_img is not None:
         img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name_snake}", width=200)
-        if st.button("Ambil ulang gambar!", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
+        if st.button("Ambil ulang gambar!", key=f"{name_snake}_retake_image_button", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
             st.session_state.open_camera_name = name_snake
             st.rerun()
     else :
-        if st.button("Klik untuk membuka Kamera!", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
+        if st.button("Klik untuk membuka Kamera!", key=f"{name_snake}_open_cam_button", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
             st.session_state.open_camera_name = name_snake
             st.rerun()
     if st.session_state.open_camera_name == name_snake:
         photo = st.camera_input(f"Upload Dokumentasi - {name_snake}!")
         if photo is not None:
-            if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", type="primary"):
+            if st.button("Klik untuk menyimpan foto!", key=f"{name_snake}_safe_image_button", icon=":material/upload:", type="primary"):
                 try:
                     image = Image.open(photo)
                     st.session_state.images[f"{name_snake}_gambar"] = image
