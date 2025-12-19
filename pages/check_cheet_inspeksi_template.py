@@ -8,9 +8,9 @@ page_config()
 BASE_DIR = Path(__file__).resolve().parents[1]
 IMAGE_DIR = None
 DATA_FILE = BASE_DIR / "data" / "data_inspeksi.json"
-PART_NAME = "ARM"
+PART_NAME = "Arm"
 
-arm_data = load_data(DATA_FILE)["ARM"]
+data = load_data(DATA_FILE)[PART_NAME]
 arm_target, arm_target_snake = load_arm_inspection_target()
 state_arm_inspection = init_state_arm_inspection(arm_target)
 
@@ -37,7 +37,7 @@ st.space("small")
 
 st.header("NDT ARM")
 # ====
-for idx, (target, target_snake) in enumerate(list(zip(arm_target, arm_target_snake))[:4], start=1):
+for idx, (target, target_snake) in enumerate(list(zip(arm_target, arm_target_snake)), start=1):
     st.subheader(f"{idx}\\. {target}", help="\n".join(str(i) for i in arm_data[target_snake].values()))
     create_inspection_inputs2(target_snake)
 # ====
@@ -75,19 +75,3 @@ if st.session_state.pdf_download:
     now = datetime.now()
     timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
     pdf_dialog(pdf_buffer, f"Report_Inspeksi_{PART_NAME}_{timestamp}.pdf")
-    
-    
-#     for target in arm_target:
-#         if st.session_state.images.get(target) is None:
-#             st.error("❌ Ada gambar yang belum diambil. Silahkan ambil dokumentasi!")
-#             st.stop()
-#     st.session_state.form_submitted = True
-#     st.session_state.pdf_download = False
-
-# if st.session_state.form_submitted:
-#     identities_processed = process_identities(identities, "inspection")
-    
-#     required_fields_modified = [required_fields[i:i+4] for i in range(0, len(required_fields), 4)]
-#     final_dict = dict(zip(arm_target, required_fields_modified))
-    
-    

@@ -152,14 +152,10 @@ def create_inspection_inputs2(name_snake):
     with col2:
         input_selectbox("Kategori", "category", f"{name_snake}_category")
         input_selectbox("Remark", "remark", f"{name_snake}_remark")
-    # camera_key = f"{name_snake}_gambar"
-    # st.checkbox("Buka Kamera", key=checkbox_key)
-    # enable = st.session_state.get(checkbox_key, False)
-    # st.camera_input("Take a picture", disabled=not enable, key=camera_key)
     img_slot = st.empty()
     saved_img = st.session_state.images.get(f"{name_snake}_gambar")
     if saved_img is not None:
-        img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name_snake}", width=200)
+        img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name_snake.replace("_", " ").title()}", width=200)
         if st.button("Ambil ulang gambar!", key=f"{name_snake}_retake_image_button", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
             st.session_state.open_camera_name = name_snake
             st.rerun()
@@ -168,13 +164,13 @@ def create_inspection_inputs2(name_snake):
             st.session_state.open_camera_name = name_snake
             st.rerun()
     if st.session_state.open_camera_name == name_snake:
-        photo = st.camera_input(f"Upload Dokumentasi - {name_snake}!")
+        photo = st.camera_input(f"Upload Dokumentasi - {name_snake.replace("_", " ").title()}!")
         if photo is not None:
             if st.button("Klik untuk menyimpan foto!", key=f"{name_snake}_safe_image_button", icon=":material/upload:", type="primary"):
                 try:
                     image = Image.open(photo)
                     st.session_state.images[f"{name_snake}_gambar"] = image
-                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name_snake}", width=200)
+                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name_snake.replace("_", " ").title()}", width=200)
                     photo = None
                     st.session_state.open_camera_name = None
                     st.rerun()
@@ -201,7 +197,7 @@ def create_inspection_inputs(name):
     img_slot = st.empty()
     saved_img = st.session_state.images.get(name)
     if saved_img is not None:
-        img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
+        img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name.replace("_", " ").title()}", width=200)
         if st.button("Ambil ulang gambar!", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
             st.session_state.open_camera_name = name
             st.rerun()
@@ -210,29 +206,19 @@ def create_inspection_inputs(name):
             st.session_state.open_camera_name = name
             st.rerun()
     if st.session_state.open_camera_name == name:
-        photo = st.camera_input(f"Upload Dokumentasi - {name}!")
+        photo = st.camera_input(f"Upload Dokumentasi - {name.replace("_", " ").title()}!")
         if photo is not None:
             if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", type="primary"):
                 try:
                     image = Image.open(photo)
                     st.session_state.images[name] = image
-                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
+                    img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name.replace("_", " ").title()}", width=200)
                     photo = None
                     st.session_state.open_camera_name = None
                     st.rerun()
                 except Exception as e:
                     st.error(f"❌ Error : {e}")
     return pemeriksaan, condition, category, remark
-
-@st.dialog("Yakin melakukan Reset?")
-def reset_confirmation():
-    st.write("Melakukan reset akan menghilangkan semua data.")
-    with st.spinner("Tunggu..."):
-        time.sleep(3)
-    if st.button("Reset!", type="primary", icon=":material/delete:", width="stretch"):
-        for key in st.session_state.keys():
-            del st.session_state[key]
-        st.rerun()
         
 @st.dialog("Download Laporan", dismissible=False)
 def pdf_dialog(pdf_buffer, file_name):
@@ -243,9 +229,10 @@ def pdf_dialog(pdf_buffer, file_name):
         file_name,
         mime="application/pdf",
         icon=":material/download:",
-        width="stretch"
+        width="stretch",
+        type="primary"
     )
-    if st.button("Tutup"):
+    if st.button("Tutup", width="stretch"):
         st.session_state.pdf_download = False
         st.rerun()
         

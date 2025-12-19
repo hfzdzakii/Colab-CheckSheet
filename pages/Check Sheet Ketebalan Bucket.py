@@ -105,7 +105,7 @@ with st.form("form_ketebalan_bucket"):
     plate_bracket = input_radio("28\\. Plate, Bracket Mounting", "thickness")
     top_box = input_radio("29\\. Top Box", "thickness")
     
-    submitted = st.form_submit_button("Save")
+    submitted = st.form_submit_button("Save", type="primary")
 
 identities = [nama, nrp, jabatan, district, date, egi, hm_unit,
             ps, metode_insp]
@@ -235,9 +235,9 @@ if st.session_state.form_submitted:
                             st.error(f"❌ Error : {e}")
         st.divider()
 
-    if st.button("📄 Download Laporan PDF!", disabled=False if st.session_state.open_camera_name==None else True):
+    if st.button("📄 Download Laporan PDF!", type="primary", disabled=False if st.session_state.open_camera_name==None else True):
         st.session_state.pdf_download = True
-        # st.rerun()
+        st.rerun()
         
     if st.session_state.pdf_download:
         missing_notes = []
@@ -278,6 +278,5 @@ if st.session_state.form_submitted:
                                                         st.session_state.bad_notes)
             now = datetime.now()
             timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-            # st.download_button("Download PDF", pdf_buffer, file_name=f"Report_Ketebalan_Bucket_{timestamp}.pdf", mime="application/pdf", icon=":material/download:", disabled=False if st.session_state.open_camera_name==None else True)
             pdf_dialog(pdf_buffer, f"Report_Ketebalan_Bucket_{timestamp}.pdf")
         
