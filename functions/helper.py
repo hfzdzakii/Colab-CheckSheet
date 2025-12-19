@@ -222,9 +222,10 @@ def process_identities(identities, mode):
         hours_meter_processed = f"Hours Meter: {identities[4]}"
         date_processed = f"Tanggal Insp: {identities[5]}"
         periode_service_processed = f"Periode Service: {identities[6]}"
+        comment = identities[7]
         return [nama_processed, code_unit_processed, egi_processed,
                 district_processed, hours_meter_processed, date_processed,
-                periode_service_processed]
+                periode_service_processed, comment]
 
                                                 # targets : zip(bucket_target, required_fields)
 def create_report_bucket_thickness(identities, targets_and_data, s_flags, w_flags, b_flags, w_imgs, b_imgs, w_notes, b_notes): # flag : list | notes : dict
