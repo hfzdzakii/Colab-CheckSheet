@@ -398,7 +398,7 @@ def create_report_inspections(part_name, identities, data, images):
     elements.append(Paragraph(f"Rincian Semua Part {part_name}!", bold_sub))
     elements.append(Spacer(1, 6))
     for idx, (target, part) in enumerate(data.items(), start=1): # data : target | image target_snake
-        target_snake = target.lower().replace(" ", "_").replace("&", "and")
+        target_snake = target.lower().replace(" ", "_").replace("&", "and").replace("/", "_")
         elements.append(Paragraph(f"{idx}. {target}", styles["Heading3"]))
         elements.append(Spacer(1, 3))
         tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
