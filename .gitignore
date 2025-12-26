@@ -3,3 +3,4 @@
 *.xlsx
 *.png
 *.drawio
+!/images/*.png
