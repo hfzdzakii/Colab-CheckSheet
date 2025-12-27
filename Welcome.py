@@ -1,18 +1,13 @@
 import streamlit as st
-import base64
 from pathlib import Path
-from functions.helper import page_config
+from functions.helper import page_config, get_base64_image
 
 page_config()
-
-def get_base64_image(image_path):
-    with open(image_path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
 
 BASE_DIR = Path(__file__).resolve().parents[0]
 IMAGE_DIR = BASE_DIR / "images"
 
-bg_base64_1 = get_base64_image(f"{IMAGE_DIR}/Gambar_Website_Col.jpg")
+bg_base64_1 = get_base64_image(f"{IMAGE_DIR}/Gambar_Website_Col.jpeg")
 
 st.markdown(
     f"""
@@ -51,14 +46,6 @@ st.markdown(
     .main > div {{
         display: flex;
         justify-content: center;
-    }}
-    
-    .card {{
-        background-color: rgba(15,17,22,0.92);
-        padding: 1.5rem;
-        border-radius: 14px;
-        max-width: 480px;
-        margin: auto;
     }}
     </style>
     """,

@@ -1,5 +1,7 @@
 import streamlit as st
 import time
+import base64
+from pathlib import Path
 import tempfile
 from PIL import Image
 from dataclasses import dataclass, field
@@ -13,12 +15,57 @@ from reportlab.lib import colors
 from reportlab.lib.units import cm
 from io import BytesIO
 
-def page_config():
-    return st.set_page_config(
-            page_title="Bucket Parts App",
-            layout="wide",
-            initial_sidebar_state="expanded",
-        )
+BASE_DIR = Path(__file__).resolve().parents[1]
+FONT_PATH = BASE_DIR / "fonts/BRLNSDB.TTF"
+FONT_NAME = 'Berlin Sans FB Demi'
+
+def get_base64_image(image_path):
+    with open(image_path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+
+def page_config(font_path=FONT_PATH, font_name=FONT_NAME):
+    with open(font_path, "rb") as f:
+        encoded_font = base64.b64encode(f.read()).decode()
+    
+    st.markdown(
+        f"""
+        <style>
+        @font-face {{
+            font-family: '{font_name}';
+            src: url(data:font/ttf;base64,{encoded_font}) format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }}
+
+        html, body, .stApp {{
+            font-family: '{font_name}', sans-serif !important;
+        }}
+        
+        h1, h2, h3, h4, h5, h6,
+        p, label, li, a, div {{
+            font-family: '{font_name}', sans-serif !important;
+        }}
+        
+        input, textarea, select {{
+            font-family: '{font_name}', sans-serif !important;
+        }}
+        
+        button {{
+            font-family: '{font_name}', sans-serif !important;
+        }}
+        [class*="css-"] {{
+            font-family: '{font_name}', sans-serif !important;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    st.set_page_config(
+        page_title="Bucket Parts App",
+        layout="wide",
+        initial_sidebar_state="expanded",
+    )
     
 @dataclass
 class AppStateBucketThickness:
@@ -75,46 +122,6 @@ def init_state_inspection(targets:list) -> AppStateInspection:
         data=st.session_state.data,
     )
 
-# @dataclass
-# class AppStateBoomInspection:
-#     submitted: bool = False
-#     pdf_download:bool = False
-#     open_camera_name: str | None = None
-#     images: dict = field(default_factory=dict)
-#     data: dict = field(default_factory=dict)
-
-# def init_state_boom_inspection() -> AppStateBoomInspection:
-#     for key, default in AppStateARMInspection().__dict__.items():
-#         st.session_state.setdefault(key, default)
-#     return AppStateBoomInspection(
-#         form_submitted=st.session_state.form_submitted,
-#         pdf_download=st.session_state.pdf_download,
-#         open_camera_name=st.session_state.open_camera_name,
-#         safe_images=st.session_state.safe_images,
-#         warning_images=st.session_state.warning_images,
-#         bad_images=st.session_state.bad_images,
-#     )
-
-# @dataclass
-# class AppStateBucketInspection:
-#     submitted: bool = False
-#     pdf_download:bool = False
-#     open_camera_name: str | None = None
-#     images: dict = field(default_factory=dict)
-#     data: dict = field(default_factory=dict)
-
-# def init_state_bucket_inspection() -> AppStateBucketInspection:
-#     for key, default in AppStateARMInspection().__dict__.items():
-#         st.session_state.setdefault(key, default)
-#     return AppStateBucketInspection(
-#         form_submitted=st.session_state.form_submitted,
-#         pdf_download=st.session_state.pdf_download,
-#         open_camera_name=st.session_state.open_camera_name,
-#         safe_images=st.session_state.safe_images,
-#         warning_images=st.session_state.warning_images,
-#         bad_images=st.session_state.bad_images,
-#     )
-
 def input_radio(message, option):
     if option == "thickness":
         options = ["👍 Good", "❌ Bad"]
@@ -137,7 +144,7 @@ def input_selectbox(message, option, key):
     return st.selectbox(message, options, key=key)
 
 def input_number(message, help):
-    return st.number_input(message, max_value=help["std"], min_value=0.0, format="%.2f", placeholder="Gunakan titik (.) sebagai pengganti koma (,)", help=f"std:{help["std"]}, min:{help["min"]}", value=None)
+    return st.number_input(message, max_value=help["std"], min_value=0.0, format="%.2f", placeholder="Gunakan titik (.)", help=f"std:{help["std"]}, min:{help["min"]}", value=None)
 
 def input_text(message):
     return st.text_input(message, value=None)
