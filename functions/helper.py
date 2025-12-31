@@ -23,6 +23,9 @@ def get_base64_image(image_path):
     with open(image_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
+def nav_and_back():
+    st.page_link("Welcome.py", label="🏠 Kembali")
+    
 
 def page_config(font_path=FONT_PATH, font_name=FONT_NAME):
     with open(font_path, "rb") as f:

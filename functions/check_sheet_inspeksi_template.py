@@ -1,11 +1,14 @@
 import streamlit as st
 from datetime import datetime
-from functions.helper import page_config, input_text, input_radio, create_inspection_inputs, process_identities, create_report_inspections, apply_data_inspection, pdf_dialog
+from functions.helper import page_config, input_text, input_radio, create_inspection_inputs, process_identities, create_report_inspections, apply_data_inspection, pdf_dialog, nav_and_back
 page_config()
 
 # ==========
 def inspection_template(part_name, data, targets, targets_snake):
+    nav_and_back()
+    
     st.title(f"Inspeksi {part_name}")
+    st.caption("Klik » di pojok kiri atas untuk melihat gambar part!")
 
     st.header("Identitas")
     id1, id2 = st.columns(2)

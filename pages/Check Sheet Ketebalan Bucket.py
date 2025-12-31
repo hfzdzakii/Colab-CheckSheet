@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from PIL import Image
 from functions.data_loader import load_data, load_bucket_thickness_target
-from functions.helper import page_config, init_state_bucket_thickness, input_number, input_radio, pdf_dialog, create_report_bucket_thickness, input_text, process_identities
+from functions.helper import page_config, init_state_bucket_thickness, input_number, input_radio, pdf_dialog, create_report_bucket_thickness, input_text, process_identities, nav_and_back
 page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -24,8 +24,11 @@ with st.sidebar:
     st.image(IMAGES_DIR / image_files[0])
     st.subheader("Bracket")
     st.image(IMAGES_DIR / image_files[1])
-    
+
+nav_and_back()
+
 st.title("Ketebalan Bucket")
+st.caption("Klik » di pojok kiri atas untuk melihat gambar part!")
 
 with st.form("form_ketebalan_bucket"):
     st.header("Identitas")

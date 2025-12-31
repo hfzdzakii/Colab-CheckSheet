@@ -7,13 +7,14 @@ page_config()
 BASE_DIR = Path(__file__).resolve().parents[0]
 IMAGE_DIR = BASE_DIR / "images"
 
-bg_base64_1 = get_base64_image(f"{IMAGE_DIR}/Gambar_Website_Col.jpeg")
+bg_base64 = get_base64_image(f"{IMAGE_DIR}/Gambar_Website_Col.jpeg")
+logo_base64 = get_base64_image(f"{IMAGE_DIR}/Logo.png")
 
 st.markdown(
     f"""
     <style>
     .stApp {{
-        background-image: url("data:image/png;base64,{bg_base64_1}");
+        background-image: url("data:image/png;base64,{bg_base64}");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -39,7 +40,7 @@ st.markdown(
 
     @media (prefers-color-scheme: dark) {{
         .stApp::before {{
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.80);
         }}
     }}
     
@@ -47,10 +48,24 @@ st.markdown(
         display: flex;
         justify-content: center;
     }}
+    
+    .top-left-image {{
+        position: relative;
+        top: 0px;
+        width: 160px;
+        z-index: 1000;
+        margin: -50px 0px;
+    }}
+    
     </style>
+    
+    <img src="data:image/png;base64, {logo_base64}"
+     class="top-left-image" alt="Logo KPP Mining">
     """,
     unsafe_allow_html=True
 )
+
+# st.image(IMAGE_DIR / "Logo.png", width=200)
 
 st.title("AMOEBA")
 st.subheader("Attachment Monitoring Base Application")
@@ -79,7 +94,7 @@ st.markdown("""
 
 st.markdown("### Mulai Sekarang!")
 
-st.caption("Klik icon » di pojok kanan atas untuk membuka menu, atau klik link di bawah ini!")
+st.caption("Klik icon » di pojok kiri atas untuk membuka menu, atau klik link di bawah ini!")
 st.page_link("pages/Check Sheet Inspeksi ARM.py", label="🦾 Inspeksi ARM")
 st.page_link("pages/Check Sheet Inspeksi Boom.py", label="🏗️ Inspeksi Boom")
 st.page_link("pages/Check Sheet Inspeksi Bucket.py", label="🪣 Inspeksi Bucket")
