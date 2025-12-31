@@ -287,13 +287,14 @@ def create_report_bucket_thickness(identities, targets_and_data, s_flags, w_flag
     )
     
     # Safe Section
-    elements.append(Paragraph("List Part Safe!", bold_sub))
-    elements.append(Spacer(1, 6))
-    for i, safe in enumerate(s_flags, start=1):
-        elements.append(Paragraph(f"{i}. {safe}", styles["Normal"]))
-        elements.append(Spacer(1, 2))
-        elements.append(Paragraph(f"Status / Ketebalan (mm): {targets_and_data[safe]}", styles["Normal"]))
+    if s_flags:
+        elements.append(Paragraph("List Part Safe!", bold_sub))
         elements.append(Spacer(1, 6))
+        for i, safe in enumerate(s_flags, start=1):
+            elements.append(Paragraph(f"{i}. {safe}", styles["Normal"]))
+            elements.append(Spacer(1, 2))
+            elements.append(Paragraph(f"Status / Ketebalan (mm): {targets_and_data[safe]}", styles["Normal"]))
+            elements.append(Spacer(1, 6))
         
             
     if w_flags:
@@ -420,8 +421,8 @@ def create_report_inspections(part_name, identities, data, images):
         elements.append(Paragraph(f"{idx}. {target}", styles["Heading3"]))
         elements.append(Spacer(1, 3))
         tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
-        images[f"{target_snake}_gambar"].save(tmp.name)
-        orig_w, orig_h = images[f"{target_snake}_gambar"].size
+        images[f"{part_name}_{target_snake}_gambar"].save(tmp.name)
+        orig_w, orig_h = images[f"{part_name}_{target_snake}_gambar"].size
         if orig_h == 0:
             scale = 1.0
         else:
