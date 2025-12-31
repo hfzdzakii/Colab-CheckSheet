@@ -57,12 +57,10 @@ def inspection_template(part_name, data, targets, targets_snake):
                     st.markdown(f"#### {i}")
                     for k in j:
                         st.markdown(f"- {k.title()}")
-                st.write(st.session_state)
                 st.stop()
                 
         if any(st.session_state[f"{part_name}_images"].get(f"{part_name}_{name_snake}_gambar") is None for name_snake in targets_snake):
             st.error("❌ Ada gambar yang belum diambil. Silahkan ambil dokumentasinya!")
-            st.write(st.session_state)
             st.stop()
                 
         st.session_state[f"{part_name}_pdf_download"] = True

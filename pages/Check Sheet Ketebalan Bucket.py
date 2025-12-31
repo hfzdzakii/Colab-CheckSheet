@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 from datetime import datetime
 from pathlib import Path
 from PIL import Image
@@ -187,10 +188,12 @@ if st.session_state[f"{PART}_form_submitted"]:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
                 if st.button("Ambil ulang gambar!", key=f"{PART}_warning_button_edit_{idx}", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
                     st.session_state[f"{PART}_open_camera_name"] = name
+                    time.sleep(0.8)
                     st.rerun()
             else :
                 if st.button("Klik untuk membuka Kamera!", key=f"{PART}_warning_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
                     st.session_state[f"{PART}_open_camera_name"] = name
+                    time.sleep(0.8)
                     st.rerun()
             if st.session_state[f"{PART}_open_camera_name"] == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"{PART}_warning_cam_{idx}")
@@ -219,10 +222,12 @@ if st.session_state[f"{PART}_form_submitted"]:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
                 if st.button("Ambil ulang gambar!", key=f"{PART}_bad_button_edit_{idx}", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
                     st.session_state[f"{PART}_open_camera_name"] = name
+                    time.sleep(0.8)
                     st.rerun()
             else:
                 if st.button("Klik untuk membuka Kamera!", key=f"{PART}_bad_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
                     st.session_state[f"{PART}_open_camera_name"] = name
+                    time.sleep(0.8)
                     st.rerun()
             if st.session_state[f"{PART}_open_camera_name"] == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"{PART}_bad_cam_{idx}")
