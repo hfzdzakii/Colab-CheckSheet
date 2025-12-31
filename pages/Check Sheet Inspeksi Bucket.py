@@ -3,7 +3,6 @@ from pathlib import Path
 from functions.check_sheet_inspeksi_template import inspection_template
 from functions.data_loader import load_data, load_bucket_inspection_target
 from functions.helper import page_config, init_state_inspection
-page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 IMAGE_DIR = BASE_DIR / "images"
@@ -13,7 +12,9 @@ image_files = [f"NDT_{PART_NAME}_{i}.png" for i in range(1, 5)]
 
 data = load_data(DATA_FILE)[PART_NAME]
 target, target_snake = load_bucket_inspection_target() # <== change this
-state_inspection = init_state_inspection(target)
+state_inspection = init_state_inspection(PART_NAME, target)
+
+page_config(PART_NAME)
 
 with st.sidebar:
     st.subheader(f"{PART_NAME}")

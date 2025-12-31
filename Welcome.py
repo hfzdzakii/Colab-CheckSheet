@@ -2,13 +2,13 @@ import streamlit as st
 from pathlib import Path
 from functions.helper import page_config, get_base64_image
 
-page_config()
-
 BASE_DIR = Path(__file__).resolve().parents[0]
 IMAGE_DIR = BASE_DIR / "images"
 
 bg_base64 = get_base64_image(f"{IMAGE_DIR}/Gambar_Website_Col.jpeg")
 logo_base64 = get_base64_image(f"{IMAGE_DIR}/Logo.png")
+
+page_config('zzz')
 
 st.markdown(
     f"""
@@ -60,7 +60,7 @@ st.markdown(
     </style>
     
     <img src="data:image/png;base64, {logo_base64}"
-     class="top-left-image" alt="Logo KPP Mining">
+    class="top-left-image" alt="Logo KPP Mining">
     """,
     unsafe_allow_html=True
 )

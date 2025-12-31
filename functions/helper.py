@@ -19,8 +19,10 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 FONT_PATH = BASE_DIR / "fonts/BRLNSDB.TTF"
 FONT_NAME = 'Berlin Sans FB Demi'
 
-def delete_session_all():
+def delete_session_some(PART):
     for key in st.session_state.keys():
+        if str(key).startswith(PART):
+            continue
         del st.session_state[key]
 
 def get_base64_image(image_path):
@@ -29,9 +31,8 @@ def get_base64_image(image_path):
 
 def nav_and_back():
     st.page_link("Welcome.py", label="🏠 Kembali")
-    
 
-def page_config(font_path=FONT_PATH, font_name=FONT_NAME):
+def page_config(PART, font_path=FONT_PATH, font_name=FONT_NAME):
     with open(font_path, "rb") as f:
         encoded_font = base64.b64encode(f.read()).decode()
     
@@ -73,7 +74,8 @@ def page_config(font_path=FONT_PATH, font_name=FONT_NAME):
         layout="wide",
         initial_sidebar_state="expanded",
     )
-    delete_session_all()
+    
+    delete_session_some(PART) # <=======================================
     
 @dataclass
 class AppStateBucketThickness:
@@ -85,17 +87,17 @@ class AppStateBucketThickness:
     bad_images:dict = field(default_factory=dict)
     bad_notes:dict = field(default_factory=dict)
     
-def init_state_bucket_thickness() -> AppStateBucketThickness:
+def init_state_bucket_thickness(PART) -> AppStateBucketThickness:
     for key, default in AppStateBucketThickness().__dict__.items():
-        st.session_state.setdefault(key, default)
+        st.session_state.setdefault(f"{PART}_{key}", default)
     return AppStateBucketThickness(
-        form_submitted=st.session_state.form_submitted,
-        pdf_download=st.session_state.pdf_download,
-        open_camera_name=st.session_state.open_camera_name,
-        warning_images=st.session_state.warning_images,
-        warning_notes=st.session_state.warning_notes,
-        bad_images=st.session_state.bad_images,
-        bad_notes=st.session_state.bad_notes
+        form_submitted=st.session_state[f"{PART}_form_submitted"],
+        pdf_download=st.session_state[f"{PART}_pdf_download"],
+        open_camera_name=st.session_state[f"{PART}_open_camera_name"],
+        warning_images=st.session_state[f"{PART}_warning_images"],
+        warning_notes=st.session_state[f"{PART}_warning_notes"],
+        bad_images=st.session_state[f"{PART}_bad_images"],
+        bad_notes=st.session_state[f"{PART}_bad_notes"]
     )
     
 @dataclass
@@ -106,14 +108,14 @@ class AppStateInspection:
     images: dict = field(default_factory=dict)
     data: dict = field(default_factory=dict)
 
-def init_state_inspection(targets:list) -> AppStateInspection:
-    st.session_state.setdefault("submitted", False)
-    st.session_state.setdefault("pdf_download", False)
-    st.session_state.setdefault("open_camera_name", None)
-    st.session_state.setdefault("images", {})
-    st.session_state.setdefault("data", {})
+def init_state_inspection(PART: str, targets:list) -> AppStateInspection:
+    st.session_state.setdefault(f"{PART}_submitted", False)
+    st.session_state.setdefault(f"{PART}_pdf_download", False)
+    st.session_state.setdefault(f"{PART}_open_camera_name", None)
+    st.session_state.setdefault(f"{PART}_images", {})
+    st.session_state.setdefault(f"{PART}_data", {})
     for target in targets:
-        st.session_state.data.setdefault(
+        st.session_state[f"{PART}_data"].setdefault(
             target,
             {
                 "pemeriksaan": None,
@@ -123,11 +125,11 @@ def init_state_inspection(targets:list) -> AppStateInspection:
             }
         )
     return AppStateInspection(
-        submitted=st.session_state.submitted,
-        pdf_download=st.session_state.pdf_download,
-        open_camera_name=st.session_state.open_camera_name,
-        images=st.session_state.images,
-        data=st.session_state.data,
+        submitted=st.session_state[f"{PART}_submitted"],
+        pdf_download=st.session_state[f"{PART}_pdf_download"],
+        open_camera_name=st.session_state[f"{PART}_open_camera_name"],
+        images=st.session_state[f"{PART}_images"],
+        data=st.session_state[f"{PART}_data"],
     )
 
 def input_radio(message, option):
@@ -157,50 +159,50 @@ def input_number(message, help):
 def input_text(message):
     return st.text_input(message, value=None)
 
-def create_inspection_inputs(name_snake):
+def create_inspection_inputs(PART, name_snake):
     col1, col2 = st.columns(2)
     with col1:
-        input_multiselect("Jenis Pemeriksaan", "pemeriksaan", f"{name_snake}_pemeriksaan")
-        input_selectbox("Jenis Kondisi", "condition", f"{name_snake}_condition")
+        input_multiselect("Jenis Pemeriksaan", "pemeriksaan", f"{PART}_{name_snake}_pemeriksaan")
+        input_selectbox("Jenis Kondisi", "condition", f"{PART}_{name_snake}_condition")
     with col2:
-        input_selectbox("Kategori", "category", f"{name_snake}_category")
-        input_selectbox("Remark", "remark", f"{name_snake}_remark")
+        input_selectbox("Kategori", "category", f"{PART}_{name_snake}_category")
+        input_selectbox("Remark", "remark", f"{PART}_{name_snake}_remark")
     img_slot = st.empty()
-    saved_img = st.session_state.images.get(f"{name_snake}_gambar")
+    saved_img = st.session_state[f"{PART}_images"].get(f"{PART}_{name_snake}_gambar")
     if saved_img is not None:
         img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name_snake.replace("_", " ").title()}", width=200)
-        if st.button("Ambil ulang gambar!", key=f"{name_snake}_retake_image_button", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
-            st.session_state.open_camera_name = name_snake
+        if st.button("Ambil ulang gambar!", key=f"{PART}_{name_snake}_retake_image_button", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
+            st.session_state[f"{PART}_open_camera_name"] = name_snake
             st.rerun()
     else :
-        if st.button("Klik untuk membuka Kamera!", key=f"{name_snake}_open_cam_button", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
-            st.session_state.open_camera_name = name_snake
+        if st.button("Klik untuk membuka Kamera!", key=f"{PART}_{name_snake}_open_cam_button", type="primary", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
+            st.session_state[f"{PART}_open_camera_name"] = name_snake
             st.rerun()
-    if st.session_state.open_camera_name == name_snake:
+    if st.session_state[f"{PART}_open_camera_name"] == name_snake:
         photo = st.camera_input(f"Upload Dokumentasi - {name_snake.replace("_", " ").title()}!")
         if photo is not None:
-            if st.button("Klik untuk menyimpan foto!", key=f"{name_snake}_safe_image_button", icon=":material/upload:", type="primary"):
+            if st.button("Klik untuk menyimpan foto!", key=f"{PART}_{name_snake}_safe_image_button", icon=":material/upload:", type="primary"):
                 try:
                     image = Image.open(photo)
-                    st.session_state.images[f"{name_snake}_gambar"] = image
+                    st.session_state[f"{PART}_images"][f"{PART}_{name_snake}_gambar"] = image
                     img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name_snake.replace("_", " ").title()}", width=200)
                     photo = None
-                    st.session_state.open_camera_name = None
+                    st.session_state[f"{PART}_open_camera_name"] = None
                     st.rerun()
                 except Exception as e:
                     st.error(f"❌ Error : {e}")
             
-def apply_data_inspection(names, names_snake):
+def apply_data_inspection(PART, names, names_snake):
     for name, name_snake in list(zip(names, names_snake)):
-        st.session_state.data[name] = {
-            "pemeriksaan": st.session_state[f"{name_snake}_pemeriksaan"],
-            "condition": st.session_state[f"{name_snake}_condition"],
-            "category": st.session_state[f"{name_snake}_category"],
-            "remark": st.session_state[f"{name_snake}_remark"],
+        st.session_state[f"{PART}_data"][name] = {
+            "pemeriksaan": st.session_state[f"{PART}_{name_snake}_pemeriksaan"],
+            "condition": st.session_state[f"{PART}_{name_snake}_condition"],
+            "category": st.session_state[f"{PART}_{name_snake}_category"],
+            "remark": st.session_state[f"{PART}_{name_snake}_remark"],
         }
         
 @st.dialog("Download Laporan", dismissible=False)
-def pdf_dialog(pdf_buffer, file_name):
+def pdf_dialog(PART, pdf_buffer, file_name):
     st.write("PDF siap diunduh!")
     st.download_button(
         "Download PDF",
@@ -212,7 +214,7 @@ def pdf_dialog(pdf_buffer, file_name):
         type="primary"
     )
     if st.button("Tutup", width="stretch"):
-        st.session_state.pdf_download = False
+        st.session_state[f"{PART}_pdf_download"] = False
         st.rerun()
         
 def process_identities(identities, mode):

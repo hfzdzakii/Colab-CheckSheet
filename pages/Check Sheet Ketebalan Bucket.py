@@ -4,18 +4,19 @@ from pathlib import Path
 from PIL import Image
 from functions.data_loader import load_data, load_bucket_thickness_target
 from functions.helper import page_config, init_state_bucket_thickness, input_number, input_radio, pdf_dialog, create_report_bucket_thickness, input_text, process_identities, nav_and_back
-page_config()
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 IMAGES_DIR = BASE_DIR / "images"
 DATA_FILE = BASE_DIR / "data" / "data_ketebalan_bucket.json"
+PART = 'Thickness'
 image_files = ["Body.png", "Bracket.png", "Get.png"]
 
-state_bucket_thickness = init_state_bucket_thickness()
-
+state_bucket_thickness = init_state_bucket_thickness(PART)
 bucket_data = load_data(DATA_FILE) # dict
 limit = 3
 bucket_target, bucket_target_snake = load_bucket_thickness_target() # list
+
+page_config(PART)
 
 with st.sidebar:
     st.subheader("GET")
@@ -134,15 +135,15 @@ if submitted:
     if any((field == 0.00 or field == None or field == "") for field in [*required_fields, *identities]):
         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
     else:
-        st.session_state.form_submitted = True
-        st.session_state.pdf_download = False
-        st.session_state.open_camera_name = None
-        st.session_state.warning_images = {}
-        st.session_state.warning_notes = {}
-        st.session_state.bad_images = {}
-        st.session_state.bad_notes = {}        
+        st.session_state[f"{PART}_form_submitted"] = True
+        st.session_state[f"{PART}_pdf_download"] = False
+        st.session_state[f"{PART}_open_camera_name"] = None
+        st.session_state[f"{PART}_warning_images"] = {}
+        st.session_state[f"{PART}_warning_notes"] = {}
+        st.session_state[f"{PART}_bad_images"] = {}
+        st.session_state[f"{PART}_bad_notes"] = {}        
     
-if st.session_state.form_submitted:
+if st.session_state[f"{PART}_form_submitted"]:
     identities_processed = process_identities(identities, "thickness")
     
     temp_dict = dict(zip(bucket_target_snake, required_fields))
@@ -178,29 +179,29 @@ if st.session_state.form_submitted:
         st.header("⚠️ Warning")
         for idx, name in enumerate(warning_flags):
             st.warning(f"{idx+1}. {name}")
-            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"warning_note_{idx}", disabled=False if st.session_state.open_camera_name==None else True)
-            st.session_state.warning_notes[name] = txt
+            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"{PART}_warning_note_{idx}", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True)
+            st.session_state[f"{PART}_warning_notes"][name] = txt
             img_slot = st.empty()
-            saved_img = st.session_state.warning_images.get(name)
+            saved_img = st.session_state[f"{PART}_warning_images"].get(name)
             if saved_img is not None:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
-                if st.button("Ambil ulang gambar!", key=f"warning_button_edit_{idx}", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
-                    st.session_state.open_camera_name = name
+                if st.button("Ambil ulang gambar!", key=f"{PART}_warning_button_edit_{idx}", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
+                    st.session_state[f"{PART}_open_camera_name"] = name
                     st.rerun()
             else :
-                if st.button("Klik untuk membuka Kamera!", key=f"warning_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
-                    st.session_state.open_camera_name = name
+                if st.button("Klik untuk membuka Kamera!", key=f"{PART}_warning_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
+                    st.session_state[f"{PART}_open_camera_name"] = name
                     st.rerun()
-            if st.session_state.open_camera_name == name:
-                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"warning_cam_{idx}")
+            if st.session_state[f"{PART}_open_camera_name"] == name:
+                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"{PART}_warning_cam_{idx}")
                 if photo is not None:
-                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"warning_upload_{idx}", type="primary"):
+                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"{PART}_warning_upload_{idx}", type="primary"):
                         try:
                             image = Image.open(photo)
-                            st.session_state.warning_images[name] = image
+                            st.session_state[f"{PART}_warning_images"][name] = image
                             img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
                             photo = None
-                            st.session_state.open_camera_name = None
+                            st.session_state[f"{PART}_open_camera_name"] = None
                             st.rerun()
                         except Exception as e:
                             st.error(f"❌ Error : {e}")
@@ -210,54 +211,54 @@ if st.session_state.form_submitted:
         st.header("❌ Bad Condition / Tidak Teridentifikasi / Tidak Ada")
         for idx, name in enumerate(bad_flags):
             st.error(f"{idx+1}. {name}")
-            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"bad_note_{idx}", disabled=False if st.session_state.open_camera_name==None else True)
-            st.session_state.bad_notes[name] = txt
+            txt = st.text_area(f"📝 Masukkan Catatan untuk {name}", key=f"{PART}_bad_note_{idx}", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True)
+            st.session_state[f"{PART}_bad_notes"][name] = txt
             img_slot = st.empty()
-            saved_img = st.session_state.bad_images.get(name)
+            saved_img = st.session_state[f"{PART}_bad_images"].get(name)
             if saved_img is not None:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
-                if st.button("Ambil ulang gambar!", key=f"bad_button_edit_{idx}", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
-                    st.session_state.open_camera_name = name
+                if st.button("Ambil ulang gambar!", key=f"{PART}_bad_button_edit_{idx}", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
+                    st.session_state[f"{PART}_open_camera_name"] = name
                     st.rerun()
             else:
-                if st.button("Klik untuk membuka Kamera!", key=f"bad_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state.open_camera_name==None else True):
-                    st.session_state.open_camera_name = name
+                if st.button("Klik untuk membuka Kamera!", key=f"{PART}_bad_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
+                    st.session_state[f"{PART}_open_camera_name"] = name
                     st.rerun()
-            if st.session_state.open_camera_name == name:
-                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"bad_cam_{idx}")
+            if st.session_state[f"{PART}_open_camera_name"] == name:
+                photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"{PART}_bad_cam_{idx}")
                 if photo is not None:
-                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"bad_upload_{idx}", type="primary"):
+                    if st.button("Klik untuk menyimpan foto!", icon=":material/upload:", key=f"{PART}_bad_upload_{idx}", type="primary"):
                         try:
                             image = Image.open(photo)
-                            st.session_state.bad_images[name] = image
+                            st.session_state[f"{PART}_bad_images"][name] = image
                             img_slot.image(image, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
                             photo = None
-                            st.session_state.open_camera_name = None
+                            st.session_state[f"{PART}_open_camera_name"] = None
                             st.rerun()
                         except Exception as e:
                             st.error(f"❌ Error : {e}")
         st.divider()
 
-    if st.button("📄 Download Laporan PDF!", type="primary", disabled=False if st.session_state.open_camera_name==None else True):
-        st.session_state.pdf_download = True
+    if st.button("📄 Download Laporan PDF!", type="primary", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
+        st.session_state[f"{PART}_pdf_download"] = True
         st.rerun()
         
-    if st.session_state.pdf_download:
+    if st.session_state[f"{PART}_pdf_download"]:
         missing_notes = []
         missing_images = []
         
         for idx, name in enumerate(warning_flags):
-            warning_note_key = f"warning_note_{idx}"
+            warning_note_key = f"{PART}_warning_note_{idx}"
             if st.session_state.get(warning_note_key) == "":
                 missing_notes.append(name)
-            if st.session_state.warning_images.get(name) is None:
+            if st.session_state[f"{PART}_warning_images"].get(name) is None:
                 missing_images.append(name)
 
         for idx, name in enumerate(bad_flags):
-            bad_note_key = f"bad_note_{idx}"
+            bad_note_key = f"{PART}_bad_note_{idx}"
             if st.session_state.get(bad_note_key) == "":
                 missing_notes.append(name)
-            if st.session_state.bad_images.get(name) is None:
+            if st.session_state[f"{PART}_bad_images"].get(name) is None:
                 missing_images.append(name)
         
         if missing_images or missing_notes:
@@ -275,11 +276,11 @@ if st.session_state.form_submitted:
             pdf_buffer = create_report_bucket_thickness(identities_processed,
                                                         dict(zip(bucket_target, required_fields)), 
                                                         safe_flags, warning_flags, bad_flags, 
-                                                        st.session_state.warning_images,
-                                                        st.session_state.bad_images,
-                                                        st.session_state.warning_notes,
-                                                        st.session_state.bad_notes)
+                                                        st.session_state[f"{PART}_warning_images"],
+                                                        st.session_state[f"{PART}_bad_images"],
+                                                        st.session_state[f"{PART}_warning_notes"],
+                                                        st.session_state[f"{PART}_bad_notes"])
             now = datetime.now()
             timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
-            pdf_dialog(pdf_buffer, f"Report_Ketebalan_Bucket_{timestamp}.pdf")
+            pdf_dialog(PART, pdf_buffer, f"Report_Ketebalan_Bucket_{timestamp}.pdf")
         
