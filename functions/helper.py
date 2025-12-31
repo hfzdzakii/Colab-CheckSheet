@@ -19,6 +19,10 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 FONT_PATH = BASE_DIR / "fonts/BRLNSDB.TTF"
 FONT_NAME = 'Berlin Sans FB Demi'
 
+def delete_session_all():
+    for key in st.session_state.keys():
+        del st.session_state[key]
+
 def get_base64_image(image_path):
     with open(image_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
@@ -69,6 +73,7 @@ def page_config(font_path=FONT_PATH, font_name=FONT_NAME):
         layout="wide",
         initial_sidebar_state="expanded",
     )
+    delete_session_all()
     
 @dataclass
 class AppStateBucketThickness:

@@ -44,15 +44,27 @@ def inspection_template(part_name, data, targets, targets_snake):
         
         if any((field == 0.0 or field == None or field == "") for field in identities):
             st.error("❌ Data Identitas atu catatan ada yang kosong. Silahkan diisi semuanya!")
+            st.write(st.session_state)
             st.stop()
             
         for target, fields in st.session_state.data.items():
-            if any(v in (None, "", "-") or (isinstance(v, list) and not v) for v in fields.values()):
-                st.error(f"❌ Ada data part {part_name} yang kosong. Silahkan diisi semuanya!")
+            if any(v in (None, "", "-", [], "[]") for v in fields.values()):
+                st.error(f"❌ Data part {part_name} yang kosong, silahkan diisi semuanya!")
+                keys = [(keyz, keyzz, valzz) for keyz, valz in st.session_state.data.items() for keyzz, valzz in valz.items() if valzz in (None, "", "-") or valzz==[]]
+                for m in keys:
+                    st.markdown(str(m))
+                
+                # parts_missing = (keyz for keyz, valz in st.session_state.data.items() for valzz in valz.values() if valzz in (None, "", "-", [], "[]"))
+                # for part_missing in parts_missing:
+                #     st.markdown(f"####{part_missing} :")
+                #     label = [keyzz for keyzz in st.session_state.data.get(part_missing)]
+                #     st.markdown(f"- {}")
+                st.write(st.session_state)
                 st.stop()
                 
         if any(st.session_state.images.get(f"{name_snake}_gambar") is None for name_snake in targets_snake):
             st.error("❌ Ada gambar yang belum diambil. Silahkan ambil dokumentasinya!")
+            st.write(st.session_state)
             st.stop()
                 
         st.session_state.pdf_download = True
@@ -64,3 +76,5 @@ def inspection_template(part_name, data, targets, targets_snake):
         now = datetime.now()
         timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
         pdf_dialog(pdf_buffer, f"Report_Inspeksi_{part_name}_{timestamp}.pdf")
+        
+    st.write(st.session_state)
