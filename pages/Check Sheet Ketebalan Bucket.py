@@ -32,7 +32,7 @@ nav_and_back()
 st.title("Ketebalan Bucket")
 st.caption("Klik » di pojok kiri atas untuk melihat gambar part!")
 
-with st.form("form_ketebalan_bucket"):
+with st.form(f"{PART}_form_ketebalan_bucket"):
     st.header("Identitas")
     st.subheader("Lengkapi identitas Anda!")
     id1, id2, id3 = st.columns(3)
@@ -110,7 +110,7 @@ with st.form("form_ketebalan_bucket"):
     plate_bracket = input_radio("28\\. Plate, Bracket Mounting", "thickness")
     top_box = input_radio("29\\. Top Box", "thickness")
     
-    submitted = st.form_submit_button("Save", type="primary")
+    submitted = st.form_submit_button("Simpan", type="primary")
 
 identities = [nama, nrp, jabatan, district, date, egi, hm_unit,
             ps, metode_insp]
@@ -132,7 +132,7 @@ required_fields = [
     plate_bracket, top_box
 ]
 
-if submitted:    
+if submitted:
     if any((field == 0.00 or field == None or field == "") for field in [*required_fields, *identities]):
         st.error("❌ Ada input yang kosong. Silahkan diisi semuanya!")
     else:
@@ -188,12 +188,10 @@ if st.session_state[f"{PART}_form_submitted"]:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
                 if st.button("Ambil ulang gambar!", key=f"{PART}_warning_button_edit_{idx}", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
                     st.session_state[f"{PART}_open_camera_name"] = name
-                    time.sleep(0.8)
                     st.rerun()
             else :
                 if st.button("Klik untuk membuka Kamera!", key=f"{PART}_warning_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
                     st.session_state[f"{PART}_open_camera_name"] = name
-                    time.sleep(0.8)
                     st.rerun()
             if st.session_state[f"{PART}_open_camera_name"] == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"{PART}_warning_cam_{idx}")
@@ -222,12 +220,10 @@ if st.session_state[f"{PART}_form_submitted"]:
                 img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name}", width=200)
                 if st.button("Ambil ulang gambar!", key=f"{PART}_bad_button_edit_{idx}", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
                     st.session_state[f"{PART}_open_camera_name"] = name
-                    time.sleep(0.8)
                     st.rerun()
             else:
                 if st.button("Klik untuk membuka Kamera!", key=f"{PART}_bad_button_{idx}", type="primary", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
                     st.session_state[f"{PART}_open_camera_name"] = name
-                    time.sleep(0.8)
                     st.rerun()
             if st.session_state[f"{PART}_open_camera_name"] == name:
                 photo = st.camera_input(f"Upload Dokumentasi - {name}!", key=f"{PART}_bad_cam_{idx}")

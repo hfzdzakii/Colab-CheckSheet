@@ -21,6 +21,8 @@ FONT_NAME = 'Berlin Sans FB Demi'
 
 def delete_session_some(PART):
     for key in st.session_state.keys():
+        if PART=="Thickness" and len(str(key).split(":"))>1:
+            continue
         if str(key).startswith(PART):
             continue
         del st.session_state[key]
@@ -173,12 +175,10 @@ def create_inspection_inputs(PART, name_snake):
         img_slot.image(saved_img, caption=f"📷 Dokumentasi tersimpan: {name_snake.replace("_", " ").title()}", width=200)
         if st.button("Ambil ulang gambar!", key=f"{PART}_{name_snake}_retake_image_button", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
             st.session_state[f"{PART}_open_camera_name"] = name_snake
-            time.sleep(0.8)
             st.rerun()
     else :
         if st.button("Klik untuk membuka Kamera!", key=f"{PART}_{name_snake}_open_cam_button", type="primary", icon=":material/camera:", disabled=False if st.session_state[f"{PART}_open_camera_name"]==None else True):
             st.session_state[f"{PART}_open_camera_name"] = name_snake
-            time.sleep(0.8)
             st.rerun()
     if st.session_state[f"{PART}_open_camera_name"] == name_snake:
         photo = st.camera_input(f"Upload Dokumentasi - {name_snake.replace("_", " ").title()}!")
